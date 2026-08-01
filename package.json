@@ -1,0 +1,18 @@
+{
+  "name": "hackathon-freeticket",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "ft-hack": "./bin/ft-hack.mjs"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "slides": "open slides/index.html",
+    "verify": "node scripts/verify.mjs",
+    "publish:data": "for f in boom/users boom/tickets boom/social freeticket/artists freeticket/events freeticket/sales freeticket/tickets; do npx @insforge/cli storage upload data/$f.csv --bucket hackathon-data --key $f.csv; done"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
