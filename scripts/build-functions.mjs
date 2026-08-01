@@ -185,6 +185,36 @@ Las llaves para cruzar están sucias a propósito:
 Y lo importante: una parte grande de los compradores NO EXISTE en Boom. Son
 nuevos. Inventarles un match es peor que dejarlos sin match.
 
+LO QUE MANDA NO ES CUÁNTAS ENTRADAS, ES CUÁLES
+${"-".repeat(72)}
+Dos reglas del negocio, medidas sobre julio:
+
+  entrada pagada (General/Preferencial/VIP)   entra ~94%  — hubo plata de por medio
+  cortesía                                    entra ~42%  — no dolió nada
+  Boom, consumo mínimo                        entra ~75%
+  Boom, membresía                             entra <=60% y nunca más
+
+Un show que "vendió" 500 con la mitad en cortesías no llena. La mezcla de tipos
+explica buena parte de la asistencia; el resto lo explica QUIÉN recibió esas
+cortesías, y eso solo lo sabes cruzando con Boom.
+
+Ojo con el atajo obvio: el use_rate crudo mezcla los dos tipos de entrada de
+Boom y se queda corto. Un fiel que solo saca entradas de membresía nunca va a
+pasar del 60%.
+
+En v2 nadie puede tener más de DOS entradas para el mismo evento.
+
+EXTRAS QUE CUENTAN
+${"-".repeat(72)}
+Si la proyección ya está y sobra reloj:
+
+  · El link efímero para la puerta. Un enlace que se mande por WhatsApp y que
+    durante 3 horas muestre el aforo aproximado del show: cuánta gente se
+    espera, el rango y cuánto personal conviene. Que caduque solo. Quien está
+    en la puerta el viernes no va a abrir un notebook.
+
+  · La curva de llegada. A qué hora entra la gente, no solo cuánta.
+
 LA REGLA QUE NO SE NEGOCIA
 ${"-".repeat(72)}
 Una petición toca UNA plataforma. Son dos endpoints distintos y ninguno
