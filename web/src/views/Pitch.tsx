@@ -32,7 +32,9 @@ export function Pitch() {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
-      if (target?.closest('a, button, input, textarea, select')) return;
+      const isTextControl = target?.closest('input, textarea, select');
+      const isInteractive = target?.closest('a, button');
+      if (isTextControl || (isInteractive && event.key === ' ')) return;
 
       if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].includes(event.key)) {
         event.preventDefault();
