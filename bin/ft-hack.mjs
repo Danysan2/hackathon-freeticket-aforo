@@ -17,7 +17,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CATALOGO } from "../scripts/build-functions.mjs";
 
-const API_POR_DEFECTO = "https://f8zf2kdy.us-east.insforge.app";
+const API_POR_DEFECTO = "https://hackathon-freeticket.vercel.app";
 const CONFIG = ".ft-hack.json";
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -85,7 +85,7 @@ Una invocación = una plataforma. Cruzarlas es tu trabajo, no el del CLI.
 
 async function pedir(plataforma, params) {
   if (!TOKEN) die("no tienes token. Corre:  ft-hack setup <tu-nombre>");
-  const url = `${API.replace(/\/$/, "")}/functions/${plataforma}?${params}`;
+  const url = `${API.replace(/\/$/, "")}/api/${plataforma}?${params}`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
   const cuerpo = await res.text();
   if (res.status === 401) die(`${JSON.parse(cuerpo).error ?? "token inválido"}`);
@@ -116,7 +116,7 @@ if (!cmd || cmd === "help" || flags.help) { ayuda(); process.exit(0); }
 if (cmd === "setup") {
   const handle = positional[1] ?? flags.handle;
   if (!handle || typeof handle !== "string") die("dime cómo te llamas:  ft-hack setup camila");
-  const res = await fetch(`${API.replace(/\/$/, "")}/functions/setup?handle=${encodeURIComponent(handle)}`);
+  const res = await fetch(`${API.replace(/\/$/, "")}/api/setup?handle=${encodeURIComponent(handle)}`);
   const data = await res.json();
   if (!res.ok || !data.token) die(data.error ?? `no se pudo registrar (${res.status})`);
 

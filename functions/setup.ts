@@ -43,6 +43,8 @@ export default async function (req: Request): Promise<Response> {
 
   const base = Deno.env.get("INSFORGE_BASE_URL");
   const apiKey = Deno.env.get("API_KEY");
+  // Lo que se le dice al participante es la URL pública; InsForge queda detrás.
+  const publica = "https://hackathon-freeticket.vercel.app";
   const cabeceras = { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" };
 
   // ¿Ya se registró? Mismo handle, mismo token.
@@ -74,13 +76,14 @@ export default async function (req: Request): Promise<Response> {
     nuevo,
     handle,
     token,
-    api: base,
+    api: publica,
     endpoints: {
-      boom: `${base}/functions/boom?resource=…`,
-      freeticket: `${base}/functions/freeticket?resource=…`,
+      contrato: publica,
+      boom: `${publica}/api/boom?resource=…`,
+      freeticket: `${publica}/api/freeticket?resource=…`,
     },
     siguiente: [
-      `export FT_HACK_API=${base}`,
+      `export FT_HACK_API=${publica}`,
       `export FT_HACK_TOKEN=${token}`,
       "ft-hack get boom profile --limit 5",
     ],

@@ -27,3 +27,6 @@ slides/
 .insforge/
 .env.local
 .DS_Store
+
+# Vercel
+.vercel

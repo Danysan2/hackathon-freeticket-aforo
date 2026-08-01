@@ -111,7 +111,10 @@ export const CATALOGO = {
   },
 };
 
-export const API = "https://f8zf2kdy.us-east.insforge.app";
+// La cara pública. InsForge queda detrás: si mañana cambia el backend, la URL
+// que los participantes tienen escrita no se mueve.
+export const API = "https://hackathon-freeticket.vercel.app";
+export const BACKEND = "https://f8zf2kdy.us-east.insforge.app";
 export const REPO = "github:LucasLeguizamo/hackathon-freeticket";
 
 // El contrato completo en texto plano. Un agente hace UN fetch a
@@ -120,7 +123,7 @@ export function readmeAgentes() {
   const recursos = Object.entries(CATALOGO).flatMap(([plataforma, def]) => [
     ``,
     `  ${plataforma.toUpperCase()} — ${def.label}`,
-    `  GET ${API}/functions/${plataforma}?resource=<recurso>`,
+    `  GET ${API}/api/${plataforma}?resource=<recurso>`,
     ...Object.entries(def.recursos).flatMap(([nombre, r]) => [
       ``,
       `    resource=${nombre}`,
@@ -132,8 +135,9 @@ export function readmeAgentes() {
   return `HACKATHON FREETICKET — «¿Cuánta gente entra realmente?»
 ${"=".repeat(72)}
 
-Esto es un contrato para agentes. Si eres un humano: el brief está en el deck y
-el repo es https://github.com/LucasLeguizamo/hackathon-freeticket
+Esto es un contrato para agentes. Léelo entero antes de la primera consulta.
+Si eres un humano: el brief se proyecta el sábado y el código está en
+https://github.com/LucasLeguizamo/hackathon-freeticket
 
 EL PROBLEMA
 ${"-".repeat(72)}
@@ -194,7 +198,7 @@ CÓMO ENTRAR
 ${"-".repeat(72)}
 1) Consigue un token. Es instantáneo, no hay registro ni aprobación:
 
-     curl "${API}/functions/setup?handle=TU-NOMBRE"
+     curl "${API}/api/setup?handle=TU-NOMBRE"
 
    Devuelve JSON con { token, api, endpoints }. Es idempotente: el mismo handle
    siempre devuelve el mismo token.
@@ -202,7 +206,7 @@ ${"-".repeat(72)}
 2) Úsalo como Bearer en todas las consultas:
 
      curl -H "Authorization: Bearer $TOKEN" \\
-       "${API}/functions/freeticket?resource=events&month=agosto"
+       "${API}/api/freeticket?resource=events&month=agosto"
 
 O con el CLI, que hace lo mismo y además pagina solo:
 
@@ -262,9 +266,13 @@ Un repositorio público con:
 Stack libre. Usar IA es obligatorio, no opcional: se evalúa el resultado y el
 criterio, no cuántas líneas se escribieron a mano.
 
+OTRAS FORMAS DE LEER ESTO MISMO
+${"-".repeat(72)}
+  ${API}/?format=json         catálogo de recursos y filtros, en JSON
+  ${API}/openapi.json         especificación OpenAPI 3.1 del API
+  ${API}/skill.md             la skill lista para instalar en tu agente
+
 ${"=".repeat(72)}
-?format=json en este mismo endpoint devuelve el catálogo de recursos y filtros
-como JSON, por si prefieres parsearlo.
 `;
 }
 
