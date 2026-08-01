@@ -95,6 +95,11 @@ const VENUES = {
 
 // Actos, no personas: el dataset es sintético y no debe parecerse a nadie real.
 // `dia` = residencia fija (0 domingo … 6 sábado). Sin `dia` = gira, fechas sueltas.
+// El acto que jala no necesita regalar entradas; el que no jala empapela la
+// sala de invitados. Por eso las cortesías salen del tirón y no son ruido:
+// un acto se comporta parecido en julio y en agosto, y ahí está la señal.
+const compsDe = (tiro) => clamp(0.62 - 0.6 * tiro, 0.04, 0.6);
+
 const ARTISTAS = [
   { nombre: "Mala Hora", ciudad: "Bogotá", venue: "Casa E", dia: 5, tiro: 0.9, fidelidad: 0.12 },
   { nombre: "Micrófono Suelto", ciudad: "Bogotá", venue: "Ace of Clubs", dia: 2, tiro: 0.45, fidelidad: -0.1 },
@@ -197,10 +202,12 @@ for (let i = 0; i < N_USERS; i++) {
     ? new Date(+created + int(0, Math.max(1, antiguedadDias - 10)) * DAY)
     : null;
 
-  // Confiabilidad latente: la probabilidad real de que esta persona entre al
-  // show cuando tiene un ticket. Es lo que el participante tiene que inferir.
-  let fiabilidad = clamp(bell(0.3, 1.02), 0.08, 0.98);
-  if (tieneMembresia) fiabilidad = clamp(fiabilidad + 0.18, 0.05, 0.98);
+  // Confiabilidad latente: dónde cae esta persona dentro de la banda de su
+  // tipo de entrada. Es lo que el participante tiene que inferir del historial.
+  // Distribución ancha a propósito: si todos se parecen, el cruce no paga y
+  // saber QUIÉN compró deja de importar.
+  let fiabilidad = clamp(0.04 + rnd() * 0.94, 0.04, 0.98);
+  if (tieneMembresia) fiabilidad = clamp(fiabilidad + 0.08, 0.04, 0.98);
 
   users.push({
     boom_user_id: `bm_usr_${pad(i + 1, 6)}`,
@@ -225,23 +232,46 @@ const boomTickets = [];
 const BOOM_EVENTS = 60;
 let btN = 0;
 
+// Bandas de asistencia por tipo de ticket, tomadas del comportamiento real.
+// La fiabilidad de la persona mueve dentro de la banda; el tipo pone el techo.
+//   membresía        entra como mucho el 60%: no dolió nada, se pierde sin culpa
+//   consumo mínimo   hay plata comprometida en la puerta, se honra bastante más
+// Techos reales por tipo de entrada. Valen igual en las dos plataformas: lo que
+// manda es si hubo plata de por medio, no en qué sistema se emitió el ticket.
+//   entrada pagada   ~95%: se honra casi siempre
+//   membresía        60% como mucho; la cortesía se comporta igual
+const BANDA = {
+  membresia: [0.22, 0.60],
+  consumo_minimo: [0.55, 0.88],
+};
+const dentroDe = ([min, max], fiabilidad) => min + (max - min) * fiabilidad;
+
 for (const u of users) {
   // Cuántos tickets sacó en Boom: más antigüedad y membresía → más historia.
   const base = (u._antiguedadDias / 1500) * 14 + (u.has_membership ? 6 : 0);
   const n = Math.max(0, Math.round(base * bell(0.3, 1.6)));
   let usados = 0;
+  // v2 no deja adquirir más de dos entradas por usuario para el mismo evento.
+  const porEvento = new Map();
 
   for (let t = 0; t < n; t++) {
+    let eventoId = `bm_evt_${pad(int(1, BOOM_EVENTS), 4)}`;
+    let intentos = 0;
+    while ((porEvento.get(eventoId) ?? 0) >= 2 && intentos++ < 8) {
+      eventoId = `bm_evt_${pad(int(1, BOOM_EVENTS), 4)}`;
+    }
+    if ((porEvento.get(eventoId) ?? 0) >= 2) continue; // el cupo del usuario se llenó
+    porEvento.set(eventoId, (porEvento.get(eventoId) ?? 0) + 1);
+
     const diasAtras = int(5, Math.min(u._antiguedadDias, 900));
     const created = new Date(HOY - diasAtras * DAY);
-    const type = u.has_membership && chance(0.55) ? "membership" : chance(0.35) ? "free" : "standard";
+    // Quien tiene membresía la usa; el resto entra por consumo mínimo.
+    const type = u.has_membership && chance(0.75) ? "membresia" : "consumo_minimo";
     const source = pick(["app", "app", "web", "referral", "box_office"]);
 
-    // Un ticket gratis se honra menos que uno que costó algo.
-    let p = u._fiabilidad;
-    if (type === "free") p *= 0.72;
-    if (type === "membership") p *= 1.05;
-    if (source === "box_office") p = clamp(p + 0.25, 0, 0.99);
+    let p = dentroDe(BANDA[type], u._fiabilidad);
+    // Quien va a la taquilla el mismo día ya salió de la casa.
+    if (source === "box_office") p = clamp(p + 0.12, 0, BANDA[type][1] + 0.05);
     const used = chance(clamp(p, 0, 0.99));
     if (used) usados++;
 
@@ -251,7 +281,7 @@ for (const u of users) {
     boomTickets.push({
       boom_ticket_id: `bm_tkt_${pad(++btN, 7)}`,
       boom_user_id: u.boom_user_id,
-      event_id: `bm_evt_${pad(int(1, BOOM_EVENTS), 4)}`,
+      event_id: eventoId,
       type,
       source,
       created_at: iso(created),
@@ -285,6 +315,7 @@ const artistas = ARTISTAS.map((a, i) => ({
   _venue: a.venue,
   _tiro: a.tiro,
   _fidelidad: a.fidelidad,
+  _comps: compsDe(a.tiro),
 }));
 
 // ---------------------------------------------------------------- 5. eventos
@@ -311,10 +342,18 @@ const nuevoEvento = ({ artista, fecha, ciudad, venue, titulo, residencia }) => {
     _starts: starts,
     _pasado: starts < HOY,
     _artista: artista,
-    // Carácter del público de ESTE show. Unos jalan al núcleo fiel, otros
-    // público nuevo y frío. Sin esto el cruce no pagaría nada a nivel evento.
-    _tilt: clamp(bell(-1, 1) * 0.7 + artista._fidelidad * 3, -1, 1),
+    // Carácter del público. Es sobre todo del ACTO, no de la función: una
+    // residencia convoca a la misma gente todas las semanas, que es justo lo
+    // que hace que julio sirva para proyectar agosto. Lo que queda es el
+    // ruido de la noche.
+    _tilt: clamp(artista._fidelidad * 5 + bell(-0.3, 0.3), -1, 1),
     _enBoom: clamp(bell(0.25, 0.85) + artista._tiro * 0.15, 0.15, 0.92),
+    // Qué proporción del show se regala (RRPP, prensa, invitados del artista).
+    // Es lo que más mueve la asistencia: la pagada casi siempre entra, la
+    // cortesía no. Y es un rasgo del ACTO, no ruido de la función: hay quien
+    // llena de invitados todas las semanas y quien vende cada silla. Por eso
+    // julio dice algo de agosto.
+    _cortesias: clamp(artista._comps + bell(-0.06, 0.06), 0.02, 0.62),
   };
   events.push(ev);
   return ev;
@@ -415,11 +454,14 @@ for (const ev of events) {
     }
 
     const [tipo, precioBase] = ev.is_paid === "true"
-      ? weighted([[TIPOS[0], 0.34], [TIPOS[1], 0.26], [TIPOS[2], 0.2], [TIPOS[3], 0.12], [TIPOS[4], 0.08]])
+      ? (chance(ev._cortesias)
+          ? TIPOS[4]
+          : weighted([[TIPOS[0], 0.37], [TIPOS[1], 0.28], [TIPOS[2], 0.22], [TIPOS[3], 0.13]]))
       : TIPOS[4];
     const unitPrice = tipo === "Cortesía" ? 0 : Math.round((precioBase * clamp(bell(0.85, 1.15), 0.7, 1.3)) / 1000) * 1000;
 
     const canal = weighted(CANALES);
+    const humorVenta = bell(0.92, 1.08); // el ánimo del grupo el día del show
     // Anticipación de compra: cola larga, mucha gente compra sobre la hora.
     // En los eventos de agosto la compra no puede ser posterior a hoy.
     let diasAntes = canal === "BOX_OFFICE" && ev._pasado ? 0 : Math.round(bell(0, 60) ** 1.4 / 12);
@@ -453,20 +495,26 @@ for (const ev of events) {
     }
 
     // Probabilidad real de que cada entrada de esta venta cruce la puerta.
-    let p = u ? u._fiabilidad : clamp(bell(0.2, 0.85) + ev._tilt * 0.18, 0.05, 0.95);
-    if (unitPrice === 0) p *= 0.62;                       // la cortesía no duele
-    else p = clamp(p + Math.min(unitPrice / 400000, 0.15), 0, 0.99);
-    if (canal === "BOX_OFFICE") p = clamp(p + 0.3, 0, 0.99);
-    if (canal === "RRPP") p *= 0.85;
-    if (diasAntes > 30) p *= 0.9;                          // comprar con mucha anticipación enfría
-    if (qty >= 3) p *= 0.93;                               // el grupo grande siempre pierde a alguien
-    if (u && u.city !== ev.city) p *= 0.55;                // de otra ciudad
-    p = clamp(p * (1 + a._fidelidad), 0.02, 0.99);         // el público del artista
+    // La banda la pone el tipo de entrada; la persona mueve dentro de la banda.
+    //   pagada     ~95%: hubo plata de por medio y la gente va
+    //   cortesía   no dolió nada; se comporta como una entrada de membresía
+    // El contexto mueve a la persona DENTRO de la banda de su tipo de entrada;
+    // nunca la saca. Si multiplicara sobre la probabilidad final, una entrada
+    // pagada podría terminar por debajo del techo de una cortesía, que es
+    // justo lo que el negocio dice que no pasa.
+    let f = u ? u._fiabilidad : clamp(bell(0.2, 0.9) + ev._tilt * 0.18, 0.05, 0.95);
+    if (canal === "BOX_OFFICE") f += 0.25;                 // ya salió de la casa
+    if (canal === "RRPP") f -= 0.15;
+    if (diasAntes > 30) f -= 0.08;                         // comprar con mucha anticipación enfría
+    if (qty >= 3) f -= 0.06;                               // el grupo grande pierde a alguien
+    if (u && u.city !== ev.city) f -= 0.28;                // de otra ciudad
+    f = clamp(f + a._fidelidad + (humorVenta - 1), 0, 1);  // el público del artista y el día
+    const banda = unitPrice === 0 ? BANDA.membresia : [0.88, 0.995];
+    const p = banda[0] + (banda[1] - banda[0]) * f;
 
-    const humor = bell(0.85, 1.15); // el ánimo del grupo el día del show
     let entraron = 0;
     for (let k = 0; k < qty; k++) {
-      const entra = chance(clamp(p * humor, 0.01, 0.99));
+      const entra = chance(clamp(p, 0.01, 0.99));
       if (entra) entraron++;
       // Entrada real: entre 50 min antes y 25 después de la hora del show.
       const cuando = entra ? new Date(+ev._starts + int(-50, 25) * 60000) : null;

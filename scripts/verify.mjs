@@ -366,21 +366,25 @@ t("cada residencia de agosto tiene hermanas en julio", () => {
 });
 
 t("el histórico de julio del artista predice su agosto", () => {
+  // Medido evento por evento y no promediando por artista: con 14 actos el
+  // promedio deja 7 puntos y cualquier correlación es ruido. Así son ~27.
   const tasaPorEvento = new Map(truthA.map((a) => [a.event_id, Number(a.tasa)]));
   const media = (xs) => xs.reduce((s, x) => s + x, 0) / xs.length;
-  const pares = [];
-  for (const a of artists) {
-    const j = julio.filter((e) => e.artist_id === a.artist_id).map((e) => tasaPorEvento.get(e.event_id));
-    const g = agosto.filter((e) => e.artist_id === a.artist_id).map((e) => tasaPorEvento.get(e.event_id));
-    if (j.length < 2 || g.length < 1) continue;
-    pares.push([media(j), media(g)]);
+  const julioDe = new Map();
+  for (const e of julio) {
+    const acc = julioDe.get(e.artist_id) ?? [];
+    acc.push(tasaPorEvento.get(e.event_id));
+    julioDe.set(e.artist_id, acc);
   }
-  assert(pares.length >= 5, `pocos artistas comparables: ${pares.length}`);
+  const pares = agosto
+    .filter((e) => julioDe.has(e.artist_id))
+    .map((e) => [media(julioDe.get(e.artist_id)), tasaPorEvento.get(e.event_id)]);
+  assert(pares.length >= 15, `pocos eventos de agosto con histórico: ${pares.length}`);
   const mx = media(pares.map((p) => p[0])), my = media(pares.map((p) => p[1]));
   const r = media(pares.map((p) => (p[0] - mx) * (p[1] - my))) /
     (Math.sqrt(media(pares.map((p) => (p[0] - mx) ** 2))) * Math.sqrt(media(pares.map((p) => (p[1] - my) ** 2))));
-  console.log(`      r (asistencia julio vs agosto, por artista) = ${r.toFixed(2)} sobre ${pares.length} actos`);
-  assert(r > 0.4, `julio no dice nada de agosto: r=${r.toFixed(2)}`);
+  console.log(`      r (julio del artista → sus eventos de agosto) = ${r.toFixed(2)} sobre ${pares.length} eventos`);
+  assert(r > 0.3, `julio no dice nada de agosto: r=${r.toFixed(2)}`);
 });
 
 t("los eventos de agosto llevan vendida solo una parte del aforo", () => {
@@ -409,46 +413,81 @@ for (const x of tickets) {
   porUsuario.set(x.boom_user_id, a);
 }
 
-t("membresía sube la tasa de uso histórico", () => {
-  const tasa = (filtro) => {
-    let n = 0, u = 0;
-    for (const usr of users.filter(filtro)) {
-      const a = porUsuario.get(usr.boom_user_id);
-      if (a) { n += a.n; u += a.u; }
-    }
-    return u / n;
-  };
-  const con = tasa((u) => u.has_membership === "true");
-  const sin = tasa((u) => u.has_membership === "false");
-  assert(con > sin + 0.08, `sin diferencia útil: con=${con.toFixed(3)} sin=${sin.toFixed(3)}`);
-  console.log(`      membresía ${(con * 100).toFixed(1)}% vs resto ${(sin * 100).toFixed(1)}%`);
-});
-
-t("el ticket gratis se honra menos que el pago", () => {
+t("la entrada de membresía tiene techo bajo; la de consumo mínimo no", () => {
   const tasa = (tipo) => {
     const t = tickets.filter((x) => x.type === tipo);
+    assert(t.length > 100, `casi no hay tickets de tipo ${tipo}: ${t.length}`);
     return t.filter((x) => x.used === "true").length / t.length;
   };
-  assert(tasa("free") < tasa("standard") - 0.05, `free=${tasa("free").toFixed(3)} standard=${tasa("standard").toFixed(3)}`);
-  console.log(`      free ${(tasa("free") * 100).toFixed(1)}% vs standard ${(tasa("standard") * 100).toFixed(1)}%`);
+  const mem = tasa("membresia");
+  const cons = tasa("consumo_minimo");
+  console.log(`      membresía ${(mem * 100).toFixed(1)}% · consumo mínimo ${(cons * 100).toFixed(1)}%`);
+  // Regla del negocio: la entrada de membresía no llega al 60%.
+  assert(mem <= 0.62, `la membresía entra ${(mem * 100).toFixed(1)}%, por encima del techo real`);
+  assert(cons > mem + 0.12, "consumo mínimo debería honrarse bastante más que la membresía");
 });
 
-t("el cruce paga: correlación entre historial y asistencia del evento", () => {
+t("v2 no deja más de dos entradas por usuario y evento", () => {
+  const par = new Map();
+  for (const x of tickets) {
+    const k = `${x.boom_user_id}|${x.event_id}`;
+    par.set(k, (par.get(k) ?? 0) + 1);
+  }
+  const tope = Math.max(...par.values());
+  assert(tope <= 2, `hay un usuario con ${tope} entradas al mismo evento`);
+});
+
+t("la entrada pagada se honra casi siempre; la cortesía no", () => {
+  const julioIds = new Set(julio.map((e) => e.event_id));
+  const deJulio = ftTickets.filter((t) => julioIds.has(t.event_id) && t.checked_in !== "");
+  const tasa = (filtro) => {
+    const t = deJulio.filter(filtro);
+    return t.filter((x) => x.checked_in === "true").length / t.length;
+  };
+  const pagada = tasa((t) => t.ticket_type !== "Cortesía");
+  const cortesia = tasa((t) => t.ticket_type === "Cortesía");
+  console.log(`      pagada ${(pagada * 100).toFixed(1)}% · cortesía ${(cortesia * 100).toFixed(1)}%`);
+  assert(pagada > 0.9, `la entrada pagada debería rondar el 95%, va en ${(pagada * 100).toFixed(1)}%`);
+  assert(cortesia <= 0.62, `la cortesía entra ${(cortesia * 100).toFixed(1)}%, por encima del techo real`);
+});
+
+t("el cruce paga: el historial de Boom predice quién entra", () => {
+  // A nivel evento la mezcla pagada/cortesía tapa todo. Donde el cruce decide
+  // es dentro del segmento que no pagó: ahí la persona vale 38 puntos de banda.
   const matchDe = new Map(truthM.map((m) => [m.sale_id, m.boom_user_id]));
-  const porEvento = new Map();
-  for (const s of sales) {
-    const bid = matchDe.get(s.sale_id);
+  const julioIds = new Set(julio.map((e) => e.event_id));
+  const cubos = [[], []]; // [historial flojo, historial fuerte]
+  for (const t of ftTickets) {
+    if (!julioIds.has(t.event_id) || t.ticket_type !== "Cortesía" || t.checked_in === "") continue;
+    const bid = matchDe.get(t.sale_id);
     if (!bid) continue;
-    const a = porUsuario.get(bid);
-    if (!a || a.n < 3) continue;
-    const acc = porEvento.get(s.event_id) ?? { suma: 0, n: 0 };
-    acc.suma += a.u / a.n;
+    const h = porUsuario.get(bid);
+    if (!h || h.n < 3) continue;
+    const r = h.u / h.n;
+    if (r < 0.4) cubos[0].push(t.checked_in === "true");
+    else if (r >= 0.7) cubos[1].push(t.checked_in === "true");
+  }
+  assert(cubos[0].length > 80 && cubos[1].length > 80, `muestra corta: ${cubos.map((c) => c.length)}`);
+  const tasa = (c) => c.filter(Boolean).length / c.length;
+  console.log(`      cortesías — historial flojo ${(tasa(cubos[0]) * 100).toFixed(1)}% vs fuerte ${(tasa(cubos[1]) * 100).toFixed(1)}%`);
+  assert(tasa(cubos[1]) > tasa(cubos[0]) + 0.12,
+    `el historial no discrimina: ${tasa(cubos[0]).toFixed(2)} vs ${tasa(cubos[1]).toFixed(2)}`);
+});
+
+t("y a nivel evento la mezcla manda: cortesías vs asistencia", () => {
+  const cortesiasDe = new Map();
+  for (const t of ftTickets) {
+    const acc = cortesiasDe.get(t.event_id) ?? { n: 0, c: 0 };
     acc.n++;
-    porEvento.set(s.event_id, acc);
+    if (t.ticket_type === "Cortesía") acc.c++;
+    cortesiasDe.set(t.event_id, acc);
   }
   const pares = truthA
-    .filter((a) => porEvento.get(a.event_id)?.n >= 15)
-    .map((a) => [porEvento.get(a.event_id).suma / porEvento.get(a.event_id).n, Number(a.tasa)]);
+    .filter((a) => cortesiasDe.get(a.event_id)?.n >= 30)
+    .map((a) => {
+      const c = cortesiasDe.get(a.event_id);
+      return [c.c / c.n, Number(a.tasa)];
+    });
   assert(pares.length >= 15, `pocos eventos con muestra: ${pares.length}`);
   const media = (xs) => xs.reduce((s, x) => s + x, 0) / xs.length;
   const mx = media(pares.map((p) => p[0])), my = media(pares.map((p) => p[1]));
@@ -456,10 +495,8 @@ t("el cruce paga: correlación entre historial y asistencia del evento", () => {
   const sx = Math.sqrt(media(pares.map((p) => (p[0] - mx) ** 2)));
   const sy = Math.sqrt(media(pares.map((p) => (p[1] - my) ** 2)));
   const r = cov / (sx * sy);
-  console.log(`      r de Pearson (historial medio vs asistencia) = ${r.toFixed(2)} sobre ${pares.length} eventos`);
-  // Con 24 eventos la correlación es ruidosa (r ≈ 0.35–0.7 según semilla). El
-  // piso es que exista: por debajo de 0.3 el cruce no paga y el reto se cae.
-  assert(r > 0.3, `el cruce no aporta señal a nivel evento: r=${r.toFixed(2)}. Prueba otra semilla o sube --events.`);
+  console.log(`      r de Pearson (% cortesías vs asistencia) = ${r.toFixed(2)} sobre ${pares.length} eventos`);
+  assert(r < -0.5, `la mezcla debería explicar buena parte de la asistencia: r=${r.toFixed(2)}`);
 });
 
 t("la asistencia de agosto varía por evento (no es una constante)", () => {

@@ -41,7 +41,16 @@ propio; para esos, el cruce con Boom es lo único que hay.
 2. **Proyección** — por cada evento de agosto, sobre los tickets ya adquiridos:
    `event_id, expected_attendance, p10, p90`.
 
-Fuera de alcance: la curva de llegada por franja horaria. Si sale de ñapa, cuenta.
+
+### Extras que cuentan
+
+Si la proyección ya está y sobra reloj:
+
+- **El link efímero para la puerta.** Un enlace que se mande por WhatsApp y que,
+  durante 3 horas, muestre el aforo aproximado del show: cuánta gente se espera,
+  el rango, y cuánto personal conviene. Que caduque solo. Quien está en la puerta
+  el viernes no va a abrir un notebook.
+- **La curva de llegada.** A qué hora entra la gente, no solo cuánta.
 
 ### Las llaves están sucias a propósito
 
@@ -114,12 +123,12 @@ distintos.
 |---|---|---|---|
 | `boom` | `users` | la base de membresías, 6.000 personas | `id, email, phone, city, membership, first_name, last_name` |
 | `boom` | `profile` | el usuario **con su historial resumido**: `use_rate`, `tickets_used`, `friends_count` | `id, email, phone, city, membership, min_tickets, min_use_rate` |
-| `boom` | `tickets` | 22.247 entradas históricas, con `used` y `date_used` | `id, user, event, used, type, source` |
+| `boom` | `tickets` | entradas históricas, con `used` y `date_used`. `type` ∈ `membresia \| consumo_minimo` | `id, user, event, used, type, source` |
 | `boom` | `social` | amigos por usuario | `user` |
 | `freeticket` | `artists` | 14 actos, su residencia y cómo les fue en julio | `id, name, city, residency` |
 | `freeticket` | `events` | 62 shows con `tickets_sold`, `attendance_rate`, `fill_rate` | `id, artist, city, venue, month, weekday, residency, upcoming` |
 | `freeticket` | `sales` | 7.091 ventas: comprador, canal, cuándo compró | `id, event, email, phone, name, channel` |
-| `freeticket` | `tickets` | 13.302 entradas, **una fila cada una**, con `checked_in` | `id, event, sale, type, checked_in` |
+| `freeticket` | `tickets` | entradas, **una fila cada una**, con `checked_in`. `ticket_type` ∈ `General \| Preferencial \| VIP \| Cortesía` | `id, event, sale, type, checked_in` |
 
 Parámetros comunes: `limit` (tope 1000), `offset`, `order=columna.asc|desc`,
 `select=col1,col2`, `format=json|csv`. La respuesta trae `count` con el total
@@ -135,6 +144,23 @@ ft-hack pull freeticket tickets --out raw/ft_tickets.csv
 La tabla de tickets es lo que convierte esto en un problema con etiquetas: no
 es un total por evento, es entrada por entrada. Y `boom/profile` te ahorra el
 primer cuarto de hora — la tasa de uso ya viene calculada.
+
+### Lo que manda no es cuántas entradas, es cuáles
+
+Dos reglas del negocio, medidas sobre julio:
+
+| Entrada | Entra |
+|---|---|
+| pagada (General, Preferencial, VIP) | **~94%** — hubo plata de por medio |
+| cortesía | **~42%** — no dolió nada |
+| Boom, consumo mínimo | ~75% |
+| Boom, membresía | **≤60%**, nunca más |
+
+Un show que "vendió" 500 con la mitad en cortesías no llena. Por eso la mezcla
+de tipos explica buena parte de la asistencia — y el resto lo explica **quién**
+recibió esas cortesías, que es justo lo que el cruce con Boom te dice.
+
+En v2 nadie puede tener más de **dos entradas para el mismo evento**.
 
 Los datos son sintéticos, con la forma real de los dos esquemas: mismos campos,
 mismos volúmenes, mismo desorden, personas y actos inventados. Cero PII.

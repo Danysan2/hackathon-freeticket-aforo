@@ -93,7 +93,9 @@ Cada plataforma tiene **su propio endpoint**: `/functions/boom` y
 
 > `used` dice si la persona **entró**, `date_used` a qué hora. Va años atrás,
 > mucho antes de la tiquetera.
-> `type` ∈ `standard | free | membership` · `source` ∈ `app | web | referral | box_office`.
+> `type` ∈ `membresia | consumo_minimo` · `source` ∈ `app | web | referral | box_office`.
+> La entrada de **membresía no pasa del 60%** de asistencia; la de consumo
+> mínimo ronda el 75%. Y v2 no deja más de **dos entradas por usuario y evento**.
 
 **`social`** — `boom_user_id, friends_count` · filtros: `user`
 
@@ -160,6 +162,25 @@ Tres fuentes de señal, y las tres suman:
 
 Encima va lo que ya sabes de la venta: precio pagado, cuánta anticipación, canal,
 tipo de ticket, si la persona es de la ciudad del evento.
+
+**Lo que más manda es el tipo de entrada.** Medido sobre julio: la pagada entra
+~94%, la cortesía ~42%. Un show que "vendió" 500 con la mitad en cortesías no
+llena. La mezcla explica buena parte de la asistencia; el resto lo explica quién
+recibió esas cortesías — y eso solo lo sabes cruzando con Boom.
+
+Ojo con el atajo obvio: el `use_rate` crudo de Boom mezcla los dos tipos de
+entrada y se queda corto. Un fiel que solo saca entradas de membresía nunca va a
+pasar del 60%.
+### Extras que cuentan
+
+Si la proyección ya está y sobra reloj:
+
+- **El link efímero para la puerta.** Un enlace que se mande por WhatsApp y que,
+  durante 3 horas, muestre el aforo aproximado del show: cuánta gente se espera,
+  el rango, y cuánto personal conviene. Que caduque solo. Quien está en la puerta
+  el viernes no va a abrir un notebook.
+- **La curva de llegada.** A qué hora entra la gente, no solo cuánta.
+
 
 **Mira los datos antes de escribir código.** Media hora leyendo CSV vale más que
 dos horas de modelo sobre supuestos falsos.
