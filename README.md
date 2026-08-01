@@ -3,12 +3,12 @@
 **Sábado 1 de agosto de 2026 · 12:30 – 16:30 · café internet · individual**
 
 Se venden 500 tickets. ¿Entran 500, 380 o 240? Hoy nadie lo sabe, y la puerta se
-dimensiona a ojo. Hay dos bases que hablan de la misma gente y nunca se han
-mirado entre sí:
+dimensiona a ojo. Hay dos plataformas que hablan de la misma gente y nunca se
+han mirado entre sí:
 
 | | Qué tiene | Qué le falta |
 |---|---|---|
-| **Boom** (membresías, v2) | La historia: membresías, tickets, amigos, puntos, y sobre todo `used` / `date_used` — **quién entró y a qué hora** | No cubre la venta paga nueva |
+| **Boom** (membresías) | La historia larga de cada persona: membresías, tickets, amigos, puntos, y sobre todo `used` / `date_used` — **quién entró y a qué hora** | No cubre la venta paga nueva |
 | **FreeTicket** (tiquetera) | La venta real: comprador, precio, canal, tipo de ticket | No sabe nada del comprador antes de la compra |
 
 **Boom tiene el comportamiento. La tiquetera tiene la venta. Cruzarlas da la proyección.**
@@ -21,15 +21,16 @@ Hoy es **1 de agosto de 2026**.
 
 | | Qué es | Qué tiene |
 |---|---|---|
-| **Julio** | Shows que ya pasaron | Ventas completas **y el check-in de cada entrada**: quién cruzó la puerta y a qué hora |
-| **Agosto** | Shows por venir | Solo los tickets **ya adquiridos**. `checked_in` viene vacío porque todavía no pasa |
+| **Julio** | 32 shows que ya pasaron | Ventas completas **y el check-in de cada entrada**: quién cruzó la puerta y a qué hora |
+| **Agosto** | 30 shows por venir | Solo los tickets **ya adquiridos**. `checked_in` viene null porque todavía no pasa |
 
 Julio está etiquetado entrada por entrada. Agosto es lo que hay que proyectar.
 
 Y hay un tercer eje: **las residencias**. Algunos actos tocan el mismo día de la
 semana en el mismo venue, todas las semanas — los viernes en Casa E, los martes
 en Ace of Clubs. Un show de residencia de agosto tiene cuatro hermanos en julio
-con el mismo público. Otros actos son fechas sueltas de gira, sin histórico propio.
+con el mismo público. Otros actos son fechas sueltas de gira, sin histórico
+propio; para esos, el cruce con Boom es lo único que hay.
 
 ---
 
@@ -42,6 +43,18 @@ con el mismo público. Otros actos son fechas sueltas de gira, sin histórico pr
 
 Fuera de alcance: la curva de llegada por franja horaria. Si sale de ñapa, cuenta.
 
+### Las llaves están sucias a propósito
+
+- **Email** — limpio, con alias `+algo`, con el dominio mal escrito (`gmial`,
+  `hotmial`), con una letra faltante, en MAYÚSCULAS. Y hay quien compró con el
+  correo de la pareja.
+- **Teléfono** — cinco formatos, a veces vacío, a veces con dos dígitos
+  cambiados de orden, a veces es el del hermano.
+- **Nombre** — sin tildes, en minúscula, apellido primero, con un segundo
+  apellido que Boom no registró, o solo la inicial.
+- **Y lo importante:** una parte grande de los compradores **no existe en Boom**.
+  Son nuevos. Inventarles un match es peor que dejarlos sin match.
+
 ---
 
 ## Arranca
@@ -52,15 +65,15 @@ Un comando. No hay repo que clonar ni CSV que bajar.
 npx github:LucasLeguizamo/hackathon-freeticket setup tu-nombre
 ```
 
-Eso te da un token y lo guarda en `.ft-hack.json`. Luego:
+Te da un token al instante —sin registro ni aprobación— y lo guarda en
+`.ft-hack.json`. Después:
 
 ```bash
 npx github:LucasLeguizamo/hackathon-freeticket sources
-npx github:LucasLeguizamo/hackathon-freeticket get freeticket events --month agosto --limit 5
+npx github:LucasLeguizamo/hackathon-freeticket get freeticket events --month agosto
 ```
 
-No hace falta clonar nada: `npx` descarga el CLI y lo corre. Si te cansa
-escribirlo completo, ponle un alias:
+Si te cansa escribirlo completo, ponle un alias:
 
 ```bash
 alias ft-hack="npx -y github:LucasLeguizamo/hackathon-freeticket"
@@ -72,13 +85,17 @@ ft-hack get boom profile --min_use_rate 0.8 --limit 20
 Dale una sola instrucción y sale de ahí sabiendo operar todo:
 
 ```
-fetch https://f8zf2kdy.us-east.insforge.app/functions/hackathon and follow the instructions
+fetch https://hackathon-freeticket.vercel.app and follow the instructions
 ```
 
 Ese endpoint devuelve el contrato completo en texto plano: el reto, el
 calendario, la regla, cómo sacar el token, cada recurso con sus filtros y por
-dónde empezar. Sin token y sin registro. Con `?format=json` devuelve el
-catálogo para parsear.
+dónde empezar. Sin token y sin registro.
+
+También está la skill lista para instalar en
+[`/skill.md`](https://hackathon-freeticket.vercel.app/skill.md), y la
+especificación en
+[`/openapi.json`](https://hackathon-freeticket.vercel.app/openapi.json).
 
 ### La regla de la casa
 
@@ -86,83 +103,55 @@ catálogo para parsear.
 distintos y ninguno devuelve datos del otro. No hay bandera para pedir las dos
 y no la va a haber: unirlas es el reto.
 
-### El API, si prefieres tu propio cliente
-
-```bash
-curl -H "Authorization: Bearer $FT_HACK_TOKEN" \\
-  "https://f8zf2kdy.us-east.insforge.app/functions/freeticket?resource=events&month=agosto"
-```
-
-| | |
-|---|---|
-| contrato | `GET https://f8zf2kdy.us-east.insforge.app/functions/hackathon` — todo, en texto plano, sin token |
-| alta | `GET https://f8zf2kdy.us-east.insforge.app/functions/setup?handle=tu-nombre` |
-| Boom | `GET https://f8zf2kdy.us-east.insforge.app/functions/boom?resource=…` |
-| tiquetera | `GET https://f8zf2kdy.us-east.insforge.app/functions/freeticket?resource=…` |
-
-Sin `resource` cada endpoint devuelve su índice: recursos, filtros y qué es cada
-uno. Parámetros comunes: `limit` (tope 1000), `offset`, `order=col.asc|desc`,
-`select=col1,col2`, `format=json|csv`.
+Los `event_id` tampoco se cruzan: `bm_evt_*` y `ft_evt_*` son universos
+distintos.
 
 ---
 
 ## Los datos
 
-Sintéticos, con la forma real de los dos esquemas: mismos campos, mismos
-volúmenes, mismo desorden, personas y actos inventados. Cero PII.
-
 | Plataforma | Recurso | Qué es | Filtros |
 |---|---|---|---|
-| `boom` | `users` | la base de membresías | `id, email, phone, city, membership, first_name, last_name` |
+| `boom` | `users` | la base de membresías, 6.000 personas | `id, email, phone, city, membership, first_name, last_name` |
 | `boom` | `profile` | el usuario **con su historial resumido**: `use_rate`, `tickets_used`, `friends_count` | `id, email, phone, city, membership, min_tickets, min_use_rate` |
-| `boom` | `tickets` | historial largo, **fila por entrada**, con `used` y `date_used` | `id, user, event, used, type, source` |
+| `boom` | `tickets` | 22.247 entradas históricas, con `used` y `date_used` | `id, user, event, used, type, source` |
 | `boom` | `social` | amigos por usuario | `user` |
-| `freeticket` | `artists` | actos, su residencia y cómo les fue en julio | `id, name, city, residency` |
-| `freeticket` | `events` | shows con `tickets_sold`, `attendance_rate`, `fill_rate` | `id, artist, city, venue, month, weekday, residency, upcoming` |
-| `freeticket` | `sales` | ventas: comprador, canal, cuándo compró | `id, event, email, phone, name, channel` |
-| `freeticket` | `tickets` | **una fila por entrada**, con `checked_in` | `id, event, sale, type, checked_in` |
+| `freeticket` | `artists` | 14 actos, su residencia y cómo les fue en julio | `id, name, city, residency` |
+| `freeticket` | `events` | 62 shows con `tickets_sold`, `attendance_rate`, `fill_rate` | `id, artist, city, venue, month, weekday, residency, upcoming` |
+| `freeticket` | `sales` | 7.091 ventas: comprador, canal, cuándo compró | `id, event, email, phone, name, channel` |
+| `freeticket` | `tickets` | 13.302 entradas, **una fila cada una**, con `checked_in` | `id, event, sale, type, checked_in` |
 
-La tabla de tickets es lo que convierte esto en un problema con etiquetas: no es
-un total por evento, es entrada por entrada. Y `boom/profile` te ahorra el
-primer cuarto de hora: la tasa de uso ya viene calculada.
+Parámetros comunes: `limit` (tope 1000), `offset`, `order=columna.asc|desc`,
+`select=col1,col2`, `format=json|csv`. La respuesta trae `count` con el total
+que existe, no el de la página.
 
-El ruido está inyectado a propósito: typos, dominios mal escritos, teléfonos en
-cinco formatos (y a veces el del hermano), gente que compró con el correo de la
-pareja, y **una parte de los compradores no existe en Boom**. Esos nuevos son la mitad del punto:
-inventarles un match es peor que dejarlos sin match.
-
-### Para el organizador
+`get` trae una página; `pull` pagina hasta traer el recurso completo y escribe
+CSV:
 
 ```bash
-npm run generate      # dataset nuevo en data/ (--seed, --users, --oneoffs)
-npm run load          # lo carga a Postgres
-npm run functions     # regenera y despliega las edge functions
-npm run verify        # 53 chequeos: CLI, aislamiento, calidad y señal
+ft-hack pull freeticket tickets --out raw/ft_tickets.csv
 ```
 
-`verify.mjs` es la red de seguridad del organizador: confirma que el dataset
-regenerado sigue teniendo **señal aprendible** (correlación entre el historial
-de Boom y la asistencia real) y que ninguna llave se filtró entre plataformas.
-Si sale rojo, el reto no se puede resolver — cambia la semilla y vuelve a correr.
+La tabla de tickets es lo que convierte esto en un problema con etiquetas: no
+es un total por evento, es entrada por entrada. Y `boom/profile` te ahorra el
+primer cuarto de hora — la tasa de uso ya viene calculada.
 
-`data/` entero está en `.gitignore`: los CSV son un paso intermedio hacia la
-base, no un entregable. El ground truth (`data/_truth/`) nunca sale de la
-máquina del organizador.
+Los datos son sintéticos, con la forma real de los dos esquemas: mismos campos,
+mismos volúmenes, mismo desorden, personas y actos inventados. Cero PII.
 
-### Publicar un dataset nuevo
+### Por dónde empezar
 
-Los CSV viven en un bucket privado de InsForge y se sirven por dos edge
-functions —una por plataforma— que validan el token. Después de regenerar:
+**Mira los datos antes de escribir código.** Media hora leyendo vale más que dos
+horas de modelo sobre supuestos falsos.
 
 ```bash
-npm run publish:data     # sube los 7 CSV al bucket
-```
-
-Para rotar los tokens del día:
-
-```bash
-npx @insforge/cli secrets update BOOM_TOKEN --value bm_...
-npx @insforge/cli secrets update FT_TOKEN --value ft_...
+ft-hack get freeticket events --limit 100          # el panorama de los 62 shows
+ft-hack get freeticket artists                     # los actos y su julio
+ft-hack get freeticket events --id ft_evt_0009     # un show de agosto
+ft-hack get freeticket tickets --event ft_evt_0009 # sus entradas, una por fila
+ft-hack get freeticket sales --event ft_evt_0009   # quién compró
+ft-hack get boom profile --email ana@gmail.com     # ¿existe en Boom?
+ft-hack get boom profile --min_use_rate 0.8        # los fieles
 ```
 
 ---
@@ -227,21 +216,3 @@ Lo que salga no se queda en el café. El estimador entra a FreeTicket como una
 proyección visible en cada evento: asistencia esperada, rango, y personal
 sugerido en puerta. Por eso la entrega pide entrada y salida limpias — para
 poderla portar sin reescribirla.
-
----
-
-## Estructura
-
-```
-bin/ft-hack.mjs             CLI (una plataforma por invocación)
-functions/                  edge functions: hackathon, setup, boom, freeticket
-migrations/                 esquema y vistas de consulta
-scripts/generate.mjs        generador sintético con semilla
-scripts/load.mjs            CSV → Postgres
-scripts/build-functions.mjs catálogo de recursos + despliegue
-scripts/verify.mjs          batería de verificación
-SKILL.md                    skill para el agente
-slides/                     deck del brief — local, no se publica
-```
-
-Cero dependencias. Node 20+.
