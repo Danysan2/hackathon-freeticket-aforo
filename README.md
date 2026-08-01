@@ -13,6 +13,8 @@ han mirado entre sí:
 
 **Boom tiene el comportamiento. La tiquetera tiene la venta. Cruzarlas da la proyección.**
 
+📊 **[Las slides del brief](https://docs.google.com/presentation/d/1RaMFgrR3J1wK_h6cBkxjxY1iiiEE_l3_/edit?usp=sharing)** — el reto, los criterios, el cronograma y cómo se califica.
+
 ---
 
 ## El calendario manda
