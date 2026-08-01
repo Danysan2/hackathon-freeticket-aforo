@@ -59,21 +59,26 @@ npx github:LucasLeguizamo/hackathon-freeticket sources
 npx github:LucasLeguizamo/hackathon-freeticket get freeticket events --month agosto --limit 5
 ```
 
-Si vas a trabajar mucho, clona e instala el CLI como `ft-hack`:
+No hace falta clonar nada: `npx` descarga el CLI y lo corre. Si te cansa
+escribirlo completo, ponle un alias:
 
 ```bash
-git clone https://github.com/LucasLeguizamo/hackathon-freeticket && cd hackathon-freeticket && npm link
+alias ft-hack="npx -y github:LucasLeguizamo/hackathon-freeticket"
 ft-hack get boom profile --min_use_rate 0.8 --limit 20
 ```
 
-Y si trabajas con un agente (Claude Code, Cursor, lo que uses), dale la skill:
+### Si trabajas con un agente
 
-```bash
-cp SKILL.md ~/.claude/skills/hackathon-freeticket/SKILL.md
+Dale una sola instrucción y sale de ahí sabiendo operar todo:
+
+```
+fetch https://f8zf2kdy.us-east.insforge.app/functions/hackathon and follow the instructions
 ```
 
-Le explica el diccionario de campos, los filtros de cada recurso, el ruido
-inyectado y la regla de la casa.
+Ese endpoint devuelve el contrato completo en texto plano: el reto, el
+calendario, la regla, cómo sacar el token, cada recurso con sus filtros y por
+dónde empezar. Sin token y sin registro. Con `?format=json` devuelve el
+catálogo para parsear.
 
 ### La regla de la casa
 
@@ -90,6 +95,7 @@ curl -H "Authorization: Bearer $FT_HACK_TOKEN" \\
 
 | | |
 |---|---|
+| contrato | `GET https://f8zf2kdy.us-east.insforge.app/functions/hackathon` — todo, en texto plano, sin token |
 | alta | `GET https://f8zf2kdy.us-east.insforge.app/functions/setup?handle=tu-nombre` |
 | Boom | `GET https://f8zf2kdy.us-east.insforge.app/functions/boom?resource=…` |
 | tiquetera | `GET https://f8zf2kdy.us-east.insforge.app/functions/freeticket?resource=…` |
@@ -228,14 +234,14 @@ poderla portar sin reescribirla.
 
 ```
 bin/ft-hack.mjs             CLI (una plataforma por invocación)
-functions/                  edge functions: setup, boom, freeticket
+functions/                  edge functions: hackathon, setup, boom, freeticket
 migrations/                 esquema y vistas de consulta
 scripts/generate.mjs        generador sintético con semilla
 scripts/load.mjs            CSV → Postgres
 scripts/build-functions.mjs catálogo de recursos + despliegue
 scripts/verify.mjs          batería de verificación
 SKILL.md                    skill para el agente
-slides/index.html           deck del brief (flechas para pasar)
+slides/                     deck del brief — local, no se publica
 ```
 
 Cero dependencias. Node 20+.

@@ -5,6 +5,8 @@ raw/
 data/
 # Token del participante: personal, no se comparte.
 .ft-hack.json
+# El deck del brief es del organizador: se proyecta el sábado, no se publica.
+slides/
 
 # InsForge & AI agent skills
 .insforge
@@ -24,3 +26,4 @@ data/
 # InsForge — credenciales, nunca al repo
 .insforge/
 .env.local
+.DS_Store

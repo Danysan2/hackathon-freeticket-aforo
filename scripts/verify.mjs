@@ -10,7 +10,7 @@ import { readFileSync, existsSync, rmSync, mkdtempSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { CATALOGO } from "./build-functions.mjs";
+import { CATALOGO, readmeAgentes } from "./build-functions.mjs";
 
 const REPO = join(SCRIPTS, "..");
 const CLI = join(REPO, "bin/ft-hack.mjs");
@@ -473,6 +473,34 @@ t("la asistencia de agosto varía por evento (no es una constante)", () => {
 
 // ------------------------------------------------------------- 8. documentos
 console.log("\n8. Documentos");
+
+t("el contrato para agentes cubre todos los recursos y filtros", () => {
+  const txt = readmeAgentes();
+  for (const [plataforma, def] of Object.entries(CATALOGO)) {
+    for (const [recurso, r] of Object.entries(def.recursos)) {
+      assert(txt.includes(`resource=${recurso}`), `el contrato no menciona ${plataforma}/${recurso}`);
+      for (const f of Object.keys(r.filtros)) {
+        assert(new RegExp(`filtros:.*\\b${f}\\b`).test(txt), `el contrato no lista el filtro ${f}`);
+      }
+    }
+  }
+  assert(/functions\/setup\?handle=/.test(txt), "no explica cómo sacar el token");
+  assert(/UNA plataforma/.test(txt), "no enuncia la regla");
+});
+
+t("las functions desplegadas están en sync con el catálogo", () => {
+  // Cambiar el catálogo y olvidar `npm run functions` deja el API mintiendo.
+  const tpl = readFileSync(join(REPO, "functions/_plataforma.ts"), "utf8");
+  for (const [plataforma, def] of Object.entries(CATALOGO)) {
+    const esperado = tpl
+      .replace("__PLATAFORMA__", plataforma)
+      .replace("__RECURSOS__", JSON.stringify(def.recursos, null, 2));
+    const actual = readFileSync(join(REPO, `functions/${plataforma}.ts`), "utf8");
+    assert(actual === esperado, `functions/${plataforma}.ts quedó viejo — corre 'npm run functions'`);
+  }
+  const readme = readFileSync(join(REPO, "functions/hackathon.ts"), "utf8");
+  assert(readme.includes(JSON.stringify(readmeAgentes())), "functions/hackathon.ts quedó viejo — corre 'npm run functions'");
+});
 
 t("SKILL.md tiene frontmatter con name y description", () => {
   const md = readFileSync(join(REPO, "SKILL.md"), "utf8");

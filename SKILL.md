@@ -34,6 +34,9 @@ Si necesitas ambas, haz dos llamadas y únelas tú.
 
 No hay CSV que descargar de ningún lado. Se consulta el API, por el CLI o por HTTP.
 
+El contrato completo está en `https://f8zf2kdy.us-east.insforge.app/functions/hackathon` — texto plano, sin
+token. Si solo vas a leer una cosa, lee esa.
+
 **Primero, el token** (una sola vez, sin registro ni espera):
 
 ```bash
