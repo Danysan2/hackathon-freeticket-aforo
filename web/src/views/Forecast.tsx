@@ -7,6 +7,7 @@ import {
   emptyLevers,
   LEVER_LABEL,
   LEVER_RATE,
+  modelAlgorithm,
   modelVersion,
   predictLocal,
   recommend,
@@ -217,7 +218,9 @@ export function Forecast() {
                 {ev.isResidency && <span className="badge">residencia {ev.weekday}</span>}
                 <span className={`badge ${risk.cls}`}>{risk.text}</span>
                 <span className="badge">
-                  {shown.source === 'local' ? 'calibración julio' : `modelo ${modelVersion ?? ''}`}
+                  {shown.source === 'local'
+                    ? 'calibración julio'
+                    : `${modelAlgorithm} · ${modelVersion ?? 'activo'}`}
                 </span>
               </div>
             </div>
@@ -469,8 +472,10 @@ export function Forecast() {
                 <p className="xs muted">
                   Sin palancas, este show proyecta {base.expected} personas.{' '}
                   {hasRemote
-                    ? 'Conectado al modelo entrenado: se consulta solo con cada cambio.'
-                    : 'Corriendo con la calibración de julio, en el navegador y sin backend.'}
+                    ? 'Conectado al endpoint del modelo: se consulta solo con cada cambio.'
+                    : base.source === 'modelo'
+                      ? `Proyección base generada por ${modelAlgorithm}; las palancas se calculan al instante en el navegador.`
+                      : 'Corriendo con la calibración de julio, en el navegador y sin backend.'}
                 </p>
               </div>
             </div>

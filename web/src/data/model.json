@@ -1,5 +1,6 @@
 {
-  "version": "2026-08-01T21:10:15Z",
+  "version": "2026-08-01T21:15:18Z",
+  "algorithm": "CatBoost",
   "rates": {},
   "events": {
     "ft_evt_0006": {

@@ -35,6 +35,7 @@ export interface TrainedEvent {
 
 export interface TrainedModel {
   version: string | null;
+  algorithm?: string;
   rates?: Partial<Record<string, number>>;
   events?: Record<string, TrainedEvent>;
 }
@@ -43,6 +44,9 @@ const trained = trainedRaw as TrainedModel;
 
 /** Versión del modelo entrenado, o null si la app corre con la calibración de julio. */
 export const modelVersion = trained.version;
+
+/** Nombre visible del algoritmo que produjo las proyecciones estáticas. */
+export const modelAlgorithm = trained.algorithm ?? 'modelo entrenado';
 
 /** Cuantil 0.10 / 0.90 de la normal estándar. */
 const Z90 = 1.2816;
