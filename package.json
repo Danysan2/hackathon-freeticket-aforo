@@ -8,11 +8,19 @@
   },
   "scripts": {
     "generate": "node scripts/generate.mjs",
-    "slides": "open slides/index.html",
+    "load": "CARGAR=1 node scripts/load.mjs",
+    "functions": "DESPLEGAR=1 node scripts/build-functions.mjs",
     "verify": "node scripts/verify.mjs",
-    "publish:data": "for f in boom/users boom/tickets boom/social freeticket/artists freeticket/events freeticket/sales freeticket/tickets; do npx @insforge/cli storage upload data/$f.csv --bucket hackathon-data --key $f.csv; done"
+    "slides": "open slides/index.html"
   },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "description": "Datos del hackathon FreeTicket: CLI y API para cruzar Boom con la tiquetera y proyectar asistencia.",
+  "files": [
+    "bin",
+    "scripts/build-functions.mjs",
+    "SKILL.md",
+    "README.md"
+  ]
 }

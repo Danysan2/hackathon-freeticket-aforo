@@ -46,75 +46,92 @@ Fuera de alcance: la curva de llegada por franja horaria. Si sale de ñapa, cuen
 
 ## Arranca
 
-```bash
-git clone <este-repo> && cd hackathon-freeticket
-
-node bin/ft-hack.mjs sources
-node bin/ft-hack.mjs peek freeticket tickets --limit 5
-node bin/ft-hack.mjs pull boom users --out raw/boom_users.csv
-node bin/ft-hack.mjs pull freeticket tickets --out raw/ft_tickets.csv
-```
-
-Si trabajas con un agente (Claude Code, Cursor, lo que uses), instálale la skill:
+Un comando. No hay repo que clonar ni CSV que bajar.
 
 ```bash
-cp SKILL.md ~/.claude/skills/hackathon-freeticket/SKILL.md   # o el equivalente de tu herramienta
+npx github:LucasLeguizamo/hackathon-freeticket setup tu-nombre
 ```
 
-La skill le explica al agente el diccionario de campos, el ruido inyectado y la
-regla de la casa.
+Eso te da un token y lo guarda en `.ft-hack.json`. Luego:
+
+```bash
+npx github:LucasLeguizamo/hackathon-freeticket sources
+npx github:LucasLeguizamo/hackathon-freeticket get freeticket events --month agosto --limit 5
+```
+
+Si vas a trabajar mucho, clona e instala el CLI como `ft-hack`:
+
+```bash
+git clone https://github.com/LucasLeguizamo/hackathon-freeticket && cd hackathon-freeticket && npm link
+ft-hack get boom profile --min_use_rate 0.8 --limit 20
+```
+
+Y si trabajas con un agente (Claude Code, Cursor, lo que uses), dale la skill:
+
+```bash
+cp SKILL.md ~/.claude/skills/hackathon-freeticket/SKILL.md
+```
+
+Le explica el diccionario de campos, los filtros de cada recurso, el ruido
+inyectado y la regla de la casa.
 
 ### La regla de la casa
 
-**Una consulta toca UNA plataforma.** No hay `--all`, no hay endpoint que
-devuelva las dos juntas. Boom y la tiquetera son sistemas separados con
-credenciales separadas — igual que en la vida real. Unirlas es tu trabajo.
+**Una consulta toca UNA plataforma.** Boom y la tiquetera son dos endpoints
+distintos y ninguno devuelve datos del otro. No hay bandera para pedir las dos
+y no la va a haber: unirlas es el reto.
 
-### Credenciales
+### El API, si prefieres tu propio cliente
 
 ```bash
-export FT_HACK_API=https://f8zf2kdy.us-east.insforge.app
-export BOOM_TOKEN=…    # se anuncian en el minuto 0
-export FT_TOKEN=…
+curl -H "Authorization: Bearer $FT_HACK_TOKEN" \\
+  "https://f8zf2kdy.us-east.insforge.app/functions/freeticket?resource=events&month=agosto"
 ```
 
-Cada plataforma tiene **su endpoint y su token**. `…/functions/boom?file=users`
-responde 401 con el token de la tiquetera, y al revés — no es cortesía del CLI,
-es el backend.
+| | |
+|---|---|
+| alta | `GET https://f8zf2kdy.us-east.insforge.app/functions/setup?handle=tu-nombre` |
+| Boom | `GET https://f8zf2kdy.us-east.insforge.app/functions/boom?resource=…` |
+| tiquetera | `GET https://f8zf2kdy.us-east.insforge.app/functions/freeticket?resource=…` |
 
-Sin `FT_HACK_API` el CLI lee de `./data`: ese es el plan B cuando se caiga el
-internet del café (los CSV también van en USB).
+Sin `resource` cada endpoint devuelve su índice: recursos, filtros y qué es cada
+uno. Parámetros comunes: `limit` (tope 1000), `offset`, `order=col.asc|desc`,
+`select=col1,col2`, `format=json|csv`.
 
 ---
 
 ## Los datos
 
-Sintéticos, generados con la forma real de los dos esquemas: mismos campos,
-mismos volúmenes, mismo desorden, personas y actos inventados. Cero PII.
+Sintéticos, con la forma real de los dos esquemas: mismos campos, mismos
+volúmenes, mismo desorden, personas y actos inventados. Cero PII.
 
-| Plataforma | Recurso | Qué es |
-|---|---|---|
-| `boom` | `users` | la base de membresías |
-| `boom` | `tickets` | historial largo, **fila por entrada**, con `used` y `date_used` |
-| `boom` | `social` | amigos por usuario |
-| `freeticket` | `artists` | actos, con su residencia (venue + día de la semana) |
-| `freeticket` | `events` | shows de julio y agosto |
-| `freeticket` | `sales` | ventas: comprador, canal, cuándo compró, cuántas entradas |
-| `freeticket` | `tickets` | **una fila por entrada**, con `checked_in` en julio y vacío en agosto |
+| Plataforma | Recurso | Qué es | Filtros |
+|---|---|---|---|
+| `boom` | `users` | la base de membresías | `id, email, phone, city, membership, first_name, last_name` |
+| `boom` | `profile` | el usuario **con su historial resumido**: `use_rate`, `tickets_used`, `friends_count` | `id, email, phone, city, membership, min_tickets, min_use_rate` |
+| `boom` | `tickets` | historial largo, **fila por entrada**, con `used` y `date_used` | `id, user, event, used, type, source` |
+| `boom` | `social` | amigos por usuario | `user` |
+| `freeticket` | `artists` | actos, su residencia y cómo les fue en julio | `id, name, city, residency` |
+| `freeticket` | `events` | shows con `tickets_sold`, `attendance_rate`, `fill_rate` | `id, artist, city, venue, month, weekday, residency, upcoming` |
+| `freeticket` | `sales` | ventas: comprador, canal, cuándo compró | `id, event, email, phone, name, channel` |
+| `freeticket` | `tickets` | **una fila por entrada**, con `checked_in` | `id, event, sale, type, checked_in` |
 
 La tabla de tickets es lo que convierte esto en un problema con etiquetas: no es
-un total por evento, es entrada por entrada.
+un total por evento, es entrada por entrada. Y `boom/profile` te ahorra el
+primer cuarto de hora: la tasa de uso ya viene calculada.
 
 El ruido está inyectado a propósito: typos, dominios mal escritos, teléfonos en
 cinco formatos (y a veces el del hermano), gente que compró con el correo de la
 pareja, y **una parte de los compradores no existe en Boom**. Esos nuevos son la mitad del punto:
 inventarles un match es peor que dejarlos sin match.
 
-Regenerar con otra semilla o otro volumen:
+### Para el organizador
 
 ```bash
-node scripts/generate.mjs --seed 7 --users 12000 --oneoffs 30
-node scripts/verify.mjs        # CLI, aislamiento, calidad del dato y señal
+npm run generate      # dataset nuevo en data/ (--seed, --users, --oneoffs)
+npm run load          # lo carga a Postgres
+npm run functions     # regenera y despliega las edge functions
+npm run verify        # 53 chequeos: CLI, aislamiento, calidad y señal
 ```
 
 `verify.mjs` es la red de seguridad del organizador: confirma que el dataset
@@ -122,8 +139,9 @@ regenerado sigue teniendo **señal aprendible** (correlación entre el historial
 de Boom y la asistencia real) y que ninguna llave se filtró entre plataformas.
 Si sale rojo, el reto no se puede resolver — cambia la semilla y vuelve a correr.
 
-El ground truth se escribe en `data/_truth/` y está en `.gitignore`. Se publican
-`data/boom/` y `data/freeticket/`, nunca `data/_truth/`.
+`data/` entero está en `.gitignore`: los CSV son un paso intermedio hacia la
+base, no un entregable. El ground truth (`data/_truth/`) nunca sale de la
+máquina del organizador.
 
 ### Publicar un dataset nuevo
 
@@ -209,13 +227,15 @@ poderla portar sin reescribirla.
 ## Estructura
 
 ```
-bin/ft-hack.mjs       CLI de datos (una plataforma por invocación)
-functions/            edge functions de InsForge (una por plataforma)
-scripts/generate.mjs  generador sintético con semilla
-scripts/verify.mjs    batería de verificación del dataset
-SKILL.md              skill para el agente
-slides/index.html     deck del brief (abrir en el navegador, flechas para pasar)
-data/                 CSVs generados (_truth no se publica)
+bin/ft-hack.mjs             CLI (una plataforma por invocación)
+functions/                  edge functions: setup, boom, freeticket
+migrations/                 esquema y vistas de consulta
+scripts/generate.mjs        generador sintético con semilla
+scripts/load.mjs            CSV → Postgres
+scripts/build-functions.mjs catálogo de recursos + despliegue
+scripts/verify.mjs          batería de verificación
+SKILL.md                    skill para el agente
+slides/index.html           deck del brief (flechas para pasar)
 ```
 
 Cero dependencias. Node 20+.

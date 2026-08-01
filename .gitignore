@@ -1,8 +1,10 @@
 node_modules/
 raw/
-# Ground truth: se queda en la máquina del organizador. Publicar data/boom y
-# data/freeticket, NUNCA data/_truth.
-_truth/
+# La data NO vive en el repo: se consulta por el CLI o por el API pública.
+# Aquí solo queda el generador, para que el organizador la pueda regenerar.
+data/
+# Token del participante: personal, no se comparte.
+.ft-hack.json
 
 # InsForge & AI agent skills
 .insforge

@@ -305,12 +305,12 @@ event_id, expected_attendance, p10, p90</pre>
     <span class="kicker">La regla que no se negocia</span>
     <h2>Una consulta toca<br />una sola plataforma</h2>
     <p>Boom y la tiquetera son sistemas separados, con credenciales separadas. No hay endpoint que devuelva las dos juntas y no lo va a haber.</p>
-    <pre><span class="c"># bien</span>
-ft-hack pull boom users --out raw/boom_users.csv
-ft-hack pull freeticket tickets --out raw/ft_tickets.csv
+    <pre><span class="c"># dos endpoints, dos llamadas</span>
+GET /functions/<span class="k">boom</span>?resource=profile&amp;email=ana@gmail.com
+GET /functions/<span class="k">freeticket</span>?resource=events&amp;month=agosto
 
 <span class="c"># el CLI te lo corta</span>
-ft-hack pull boom freeticket
+ft-hack get boom freeticket
 <span class="c">✕ una invocación = una plataforma. El cruce es tuyo.</span></pre>
     <p class="lead">Unirlas es el reto, no la infraestructura.</p>
   </section>
@@ -376,20 +376,48 @@ ft-hack pull boom freeticket
   <section>
     <span class="kicker">Cómo se arranca</span>
     <h2>Tres comandos</h2>
-    <pre><span class="c"># qué hay y con qué credencial</span>
-node bin/ft-hack.mjs <span class="k">sources</span>
+    <pre><span class="c"># tu token, una sola vez</span>
+npx github:LucasLeguizamo/hackathon-freeticket <span class="k">setup</span> tu-nombre
 
-<span class="c"># mirar antes de escribir código</span>
-node bin/ft-hack.mjs <span class="k">peek</span> freeticket tickets --limit 5
+<span class="c"># qué recursos y filtros hay</span>
+ft-hack <span class="k">sources</span>
 
-<span class="c"># jalar</span>
-node bin/ft-hack.mjs <span class="k">pull</span> freeticket tickets --out raw/ft_tickets.csv</pre>
-    <p class="lead">Y si trabajas con un agente, dale la skill: <code>SKILL.md</code> tiene el diccionario de campos, el ruido y la regla de la casa.</p>
-    <pre><span class="c"># credenciales del día</span>
-export FT_HACK_API=https://f8zf2kdy.us-east.insforge.app
-export BOOM_TOKEN=…
-export FT_TOKEN=…</pre>
-    <p>Cada plataforma tiene su endpoint y su token: el de la tiquetera responde <strong>401</strong> contra Boom. Si se cae el internet, los CSV están en la USB y el CLI lee de <code>./data</code>.</p>
+<span class="c"># consultas concretas</span>
+ft-hack <span class="k">get</span> boom profile --email ana@gmail.com
+ft-hack <span class="k">get</span> boom tickets --user bm_usr_000123
+ft-hack <span class="k">get</span> freeticket events --month agosto
+ft-hack <span class="k">get</span> freeticket artists --id ft_art_001
+
+<span class="c"># o el recurso completo, paginado</span>
+ft-hack <span class="k">pull</span> freeticket tickets --out raw/ft_tickets.csv</pre>
+    <p class="lead">Y si trabajas con un agente, dale la skill: <code>SKILL.md</code> tiene el diccionario de campos, los filtros de cada recurso y la regla de la casa.</p>
+    <p>No hay CSV que bajar ni credencial que pedirle a nadie: <code>setup</code> reparte el token solo. Los datos viven en una base y se consultan con filtros — por usuario, por artista, por evento, por mes.</p>
+  </section>
+
+  <section>
+    <span class="kicker">La API</span>
+    <h2>Se consulta,<br />no se descarga</h2>
+    <div class="grid grid-2">
+      <div class="card card-teal">
+        <h3 class="mono teal">/functions/boom</h3>
+        <table style="margin-top:1rem">
+          <tr><td class="mono">users</td><td>la base de membresías</td></tr>
+          <tr><td class="mono amarillo">profile</td><td>el usuario <strong>con su historial ya resumido</strong>: use_rate, tickets_used, friends_count</td></tr>
+          <tr><td class="mono">tickets</td><td>historial fila por entrada</td></tr>
+          <tr><td class="mono">social</td><td>amigos</td></tr>
+        </table>
+      </div>
+      <div class="card card-yellow">
+        <h3 class="mono amarillo">/functions/freeticket</h3>
+        <table style="margin-top:1rem">
+          <tr><td class="mono">artists</td><td>actos, residencia y su julio</td></tr>
+          <tr><td class="mono">events</td><td>shows con tickets_sold y attendance_rate</td></tr>
+          <tr><td class="mono">sales</td><td>ventas</td></tr>
+          <tr><td class="mono">tickets</td><td>una fila por entrada</td></tr>
+        </table>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem">Cada recurso tiene sus filtros — <code>--user</code>, <code>--artist</code>, <code>--month</code>, <code>--min_use_rate</code>… Sin <code>resource</code>, el endpoint devuelve su propio índice.</p>
   </section>
 
   <section>

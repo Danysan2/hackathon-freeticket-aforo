@@ -10,6 +10,7 @@ import { readFileSync, existsSync, rmSync, mkdtempSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { CATALOGO } from "./build-functions.mjs";
 
 const REPO = join(SCRIPTS, "..");
 const CLI = join(REPO, "bin/ft-hack.mjs");
@@ -27,134 +28,159 @@ const t = (nombre, fn) => {
 };
 const assert = (cond, msg) => { if (!cond) throw new Error(msg); };
 
-const run = (args, env = {}) =>
-  execFileSync("node", [CLI, ...args], { cwd: REPO, encoding: "utf8", maxBuffer: 64 * 1024 * 1024, env: { ...process.env, ...env } });
-
-const runFail = (args, env = {}) => {
-  try {
-    execFileSync("node", [CLI, ...args], { cwd: REPO, encoding: "utf8", stdio: "pipe", maxBuffer: 64 * 1024 * 1024, env: { ...process.env, ...env } });
-    return null;
-  } catch (e) {
-    return { code: e.status, err: e.stderr };
-  }
-};
-
 const csvRows = (txt) => txt.trim().split("\n").length - 1;
-const cols = (txt) => txt.split("\n")[0].split(",");
 
-// ---------------------------------------------------------------- 1. CLI local
-console.log("\n1. CLI contra ./data");
-
-t("sources lista las dos plataformas", () => {
-  const out = run(["sources"]);
-  assert(out.includes("boom") && out.includes("freeticket"), "faltan plataformas");
-  assert(out.includes("BOOM_TOKEN") && out.includes("FT_TOKEN"), "faltan tokens");
-});
-
-t("help no revienta y sale 0", () => {
-  assert(run(["help"]).includes("ft-hack"), "sin ayuda");
-});
-
-for (const [plat, rec] of [["boom", "users"], ["boom", "tickets"], ["boom", "social"], ["freeticket", "artists"], ["freeticket", "events"], ["freeticket", "sales"], ["freeticket", "tickets"]]) {
-  t(`pull ${plat} ${rec} devuelve CSV con cabecera y filas`, () => {
-    const out = run(["pull", plat, rec]);
-    assert(out.includes(","), "no parece CSV");
-    assert(csvRows(out) > 10, `muy pocas filas: ${csvRows(out)}`);
-  });
-}
-
-t("peek respeta --limit", () => {
-  const filas = JSON.parse(run(["peek", "boom", "users", "--limit", "3"]).split("\n").slice(2).join("\n"));
-  assert(filas.length === 3, `esperaba 3, vinieron ${filas.length}`);
-});
-
-t("--format json produce JSON válido y parseable", () => {
-  const filas = JSON.parse(run(["pull", "freeticket", "events", "--format", "json"]));
-  assert(Array.isArray(filas) && filas.length > 30, `pocos eventos: ${filas.length}`);
-  assert(filas[0].event_id.startsWith("ft_evt_"), "id mal formado");
-});
-
-t("--out escribe el archivo", () => {
-  const dir = mkdtempSync(join(tmpdir(), "fth-"));
-  const dest = join(dir, "sub/dir/x.csv");
-  run(["pull", "boom", "social", "--out", dest]);
-  assert(existsSync(dest), "no escribió");
-  assert(csvRows(readFileSync(dest, "utf8")) === 6000, "filas incompletas");
-  rmSync(dir, { recursive: true });
-});
-
-// ------------------------------------------------------------- 2. la regla dura
-console.log("\n2. Una plataforma por invocación");
-
-t("pull boom freeticket → error y exit 1", () => {
-  const r = runFail(["pull", "boom", "freeticket"]);
-  assert(r && r.code === 1, "debió salir 1");
-  assert(/una plataforma/i.test(r.err), `mensaje inesperado: ${r.err}`);
-});
-
-t("peek freeticket boom → también bloqueado", () => {
-  const r = runFail(["peek", "freeticket", "boom"]);
-  assert(r && r.code === 1, "debió salir 1");
-});
-
-t("no existe ningún --all / --both en el código", () => {
-  const src = readFileSync(CLI, "utf8").split("\n").filter((l) => !l.trim().startsWith("//")).join("\n");
-  assert(!/--all\b|--both\b/.test(src), "hay una bandera de escape");
-});
-
-t("recurso de la otra plataforma no se cuela (boom events)", () => {
-  const r = runFail(["pull", "boom", "events"]);
-  assert(r && r.code === 1, "debió rechazar");
-  assert(/recurso inválido/i.test(r.err), r.err);
-});
-
-// ------------------------------------------------------------ 3. errores claros
-console.log("\n3. Errores");
-
-t("plataforma inexistente", () => {
-  const r = runFail(["pull", "spotify", "users"]);
-  assert(r && /plataforma inválida/i.test(r.err), r?.err);
-});
-
-t("comando desconocido", () => {
-  const r = runFail(["fetch", "boom", "users"]);
-  assert(r && /desconocido/i.test(r.err), r?.err);
-});
-
-t("carpeta de datos inexistente da mensaje accionable", () => {
-  const r = runFail(["pull", "boom", "users", "--api", "./no-existe"]);
-  assert(r && /generate\.mjs/.test(r.err), `no sugiere el generador: ${r?.err}`);
-});
-
-// ------------------------------------------------------------------ 4. HTTP
-console.log("\n4. Transporte HTTP + tokens");
+// ------------------------------------------------------- 1-4. CLI contra el API
+// El CLI ya no lee archivos: todo pasa por el API. Se levanta un servidor que
+// calca el contrato real para que la prueba no dependa de la red.
 
 const server = spawn("node", [join(SCRIPTS, "_verify-server.mjs")], { stdio: "pipe" });
 await new Promise((r) => server.stdout.once("data", r));
 const API = "http://localhost:8931";
+const TRABAJO = mkdtempSync(join(tmpdir(), "ft-"));
 
-t("pull por HTTP con token correcto", () => {
-  const out = run(["pull", "boom", "users", "--api", API], { BOOM_TOKEN: "boom-secreto" });
-  assert(csvRows(out) === 6000, `filas: ${csvRows(out)}`);
+const cli = (args, env = {}) =>
+  execFileSync("node", [CLI, ...args], {
+    cwd: TRABAJO, encoding: "utf8", maxBuffer: 64 * 1024 * 1024,
+    env: { ...process.env, FT_HACK_API: API, ...env },
+  });
+
+const cliFail = (args, env = {}) => {
+  try {
+    execFileSync("node", [CLI, ...args], {
+      cwd: TRABAJO, encoding: "utf8", stdio: "pipe", maxBuffer: 64 * 1024 * 1024,
+      env: { ...process.env, FT_HACK_API: API, ...env },
+    });
+    return null;
+  } catch (e) { return { code: e.status, err: e.stderr }; }
+};
+
+console.log("\n1. Alta de participante");
+
+t("setup entrega un token y lo guarda en .ft-hack.json", () => {
+  const out = cli(["setup", "camila"]);
+  assert(/hk_/.test(out), "no imprimió el token");
+  const cfg = JSON.parse(readFileSync(join(TRABAJO, ".ft-hack.json"), "utf8"));
+  assert(cfg.token.startsWith("hk_"), "token mal guardado");
+  assert(cfg.handle === "camila", "handle mal guardado");
 });
 
-t("cada plataforma usa SU token (FT_TOKEN no abre boom)", () => {
-  const r = runFail(["pull", "boom", "users", "--api", API], { FT_TOKEN: "boom-secreto" });
-  assert(r && /sin acceso a boom/i.test(r.err), `esperaba 401 manejado: ${r?.err}`);
-  assert(/BOOM_TOKEN/.test(r.err), "no dice qué variable falta");
+t("setup es idempotente: mismo handle, mismo token", () => {
+  const antes = JSON.parse(readFileSync(join(TRABAJO, ".ft-hack.json"), "utf8")).token;
+  cli(["setup", "camila"]);
+  const despues = JSON.parse(readFileSync(join(TRABAJO, ".ft-hack.json"), "utf8")).token;
+  assert(antes === despues, "el token cambió al repetir setup");
 });
 
-t("token equivocado → mensaje, no stacktrace", () => {
-  const r = runFail(["pull", "freeticket", "sales", "--api", API], { FT_TOKEN: "malo" });
-  assert(r && !/at .*\.mjs:/.test(r.err), `filtró stacktrace:\n${r?.err}`);
+t("setup sin nombre falla con un mensaje útil", () => {
+  const r = cliFail(["setup"]);
+  assert(r && /cómo te llamas/i.test(r.err), r?.err);
 });
 
-t("FT_HACK_API por variable de entorno funciona igual que --api", () => {
-  const out = run(["pull", "freeticket", "events"], { FT_HACK_API: API, FT_TOKEN: "ft-secreto" });
-  assert(csvRows(out) > 30, `filas: ${csvRows(out)}`);
+t("el CLI toma el token del archivo sin variables de entorno", () => {
+  const out = cli(["get", "freeticket", "artists", "--limit", "3"]);
+  assert(JSON.parse(out).rows.length === 3, "no leyó .ft-hack.json");
+});
+
+console.log("\n2. Consultas");
+
+for (const [plat, rec] of [["boom", "users"], ["boom", "tickets"], ["boom", "social"],
+                           ["freeticket", "artists"], ["freeticket", "events"],
+                           ["freeticket", "sales"], ["freeticket", "tickets"]]) {
+  t(`get ${plat} ${rec} responde con filas`, () => {
+    const r = JSON.parse(cli(["get", plat, rec, "--limit", "5"]));
+    assert(r.resource === rec, "recurso equivocado");
+    assert(r.rows.length > 0, "sin filas");
+    assert(r.count > 0, "sin conteo total");
+  });
+}
+
+t("un filtro concreto reduce el resultado", () => {
+  const todos = JSON.parse(cli(["get", "freeticket", "events", "--limit", "1"])).count;
+  const uno = JSON.parse(cli(["get", "freeticket", "events", "--artist", "ft_art_001"]));
+  assert(uno.count > 0 && uno.count < todos, `filtro sin efecto: ${uno.count} de ${todos}`);
+  assert(uno.rows.every((e) => e.artist_id === "ft_art_001"), "devolvió eventos de otro artista");
+});
+
+t("consulta por usuario concreto", () => {
+  const r = JSON.parse(cli(["get", "boom", "users", "--id", "bm_usr_000001"]));
+  assert(r.count === 1 && r.rows[0].boom_user_id === "bm_usr_000001", "no encontró al usuario");
+});
+
+t("--format csv devuelve CSV", () => {
+  const out = cli(["get", "boom", "users", "--limit", "3", "--format", "csv"]);
+  assert(out.split("\n")[0].includes("boom_user_id"), "no parece CSV");
+});
+
+t("pull pagina hasta traer el recurso completo", () => {
+  const dest = join(TRABAJO, "raw/users.csv");
+  cli(["pull", "boom", "users", "--out", dest]);
+  assert(csvRows(readFileSync(dest, "utf8")) === 6000, `trajo ${csvRows(readFileSync(dest, "utf8"))} de 6000`);
+});
+
+console.log("\n3. La regla dura");
+
+t("get boom freeticket → error y exit 1", () => {
+  const r = cliFail(["get", "boom", "freeticket"]);
+  assert(r && r.code === 1, "debió salir 1");
+  assert(/una plataforma/i.test(r.err), `mensaje inesperado: ${r.err}`);
+});
+
+t("no existe ninguna bandera para pedir las dos", () => {
+  const src = readFileSync(CLI, "utf8").split("\n").filter((l) => !l.trim().startsWith("//")).join("\n");
+  assert(!/--all\b|--both\b|--todas\b/.test(src), "hay una bandera de escape");
+});
+
+t("un recurso de la otra plataforma no se cuela", () => {
+  const r = cliFail(["get", "boom", "events"]);
+  assert(r && /recurso inválido/i.test(r.err), r?.err);
+});
+
+t("el API tampoco mezcla: cada función conoce solo sus recursos", () => {
+  const boom = Object.keys(CATALOGO.boom.recursos);
+  const ft = Object.keys(CATALOGO.freeticket.recursos);
+  const relBoom = Object.values(CATALOGO.boom.recursos).map((r) => r.rel);
+  const relFt = Object.values(CATALOGO.freeticket.recursos).map((r) => r.rel);
+  assert(relBoom.every((r) => r.startsWith("boom_")), `relación ajena en boom: ${relBoom}`);
+  assert(relFt.every((r) => r.startsWith("ft_")), `relación ajena en freeticket: ${relFt}`);
+  assert(boom.length > 0 && ft.length > 0, "catálogo vacío");
+});
+
+console.log("\n4. Errores");
+
+t("sin token, mensaje accionable", () => {
+  const solo = mkdtempSync(join(tmpdir(), "sin-"));
+  const r = (() => {
+    try {
+      execFileSync("node", [CLI, "get", "boom", "users"], {
+        cwd: solo, encoding: "utf8", stdio: "pipe",
+        env: { ...process.env, FT_HACK_API: API, FT_HACK_TOKEN: "" },
+      });
+      return null;
+    } catch (e) { return { err: e.stderr }; }
+  })();
+  assert(r && /setup/.test(r.err), `no sugiere setup: ${r?.err}`);
+  rmSync(solo, { recursive: true });
+});
+
+t("token inválido → mensaje, no stacktrace", () => {
+  const r = cliFail(["get", "boom", "users"], { FT_HACK_TOKEN: "hk_inventado" });
+  assert(r && /token inválido/i.test(r.err), r?.err);
+  assert(!/at .*\.mjs:/.test(r.err), "filtró stacktrace");
+});
+
+t("filtro mal escrito no se ignora en silencio", () => {
+  const r = cliFail(["get", "boom", "users", "--emial", "x"]);
+  assert(r && /no es un filtro/i.test(r.err), r?.err);
+});
+
+t("plataforma inexistente", () => {
+  const r = cliFail(["get", "spotify", "users"]);
+  assert(r && /plataforma inválida/i.test(r.err), r?.err);
 });
 
 server.kill();
+rmSync(TRABAJO, { recursive: true, force: true });
 
 // -------------------------------------------------------- 5. generador
 console.log("\n5. Generador");
@@ -474,11 +500,23 @@ t("README y slides coinciden en el cronograma", () => {
   }
 });
 
-t("_truth/ está ignorado por git", () => {
+t("la data NO va al repo: solo se llega por CLI o API", () => {
   const gi = readFileSync(join(REPO, ".gitignore"), "utf8");
-  assert(/^_truth\/$/m.test(gi), "truth/ no está en .gitignore");
-  const out = execFileSync("git", ["status", "--porcelain", "--ignored"], { cwd: REPO, encoding: "utf8" });
-  assert(/^!! data\/_truth\//m.test(out), "git no lo está ignorando de verdad");
+  assert(/^data\/$/m.test(gi), "data/ no está en .gitignore");
+  assert(/^\.ft-hack\.json$/m.test(gi), "el token del participante no está ignorado");
+  const rastreados = execFileSync("git", ["ls-files"], { cwd: REPO, encoding: "utf8" }).split("\n");
+  const fugas = rastreados.filter((f) => f.startsWith("data/") || f.endsWith(".csv") || f === ".ft-hack.json");
+  assert(fugas.length === 0, `el repo rastrea datos: ${fugas.join(", ")}`);
+});
+
+t("ningún archivo del repo lleva un token ni la API key", () => {
+  const rastreados = execFileSync("git", ["ls-files"], { cwd: REPO, encoding: "utf8" }).trim().split("\n");
+  // Este mismo archivo lleva los patrones que busca; excluirlo evita el falso positivo.
+  for (const f of rastreados.filter((f) => f !== "scripts/verify.mjs")) {
+    const txt = readFileSync(join(REPO, f), "utf8");
+    const hit = txt.match(/hk_[0-9a-f]{16,}|uak_[A-Za-z0-9_-]{10,}|eyJhbGciOi/);
+    assert(!hit, `${f} contiene una credencial: ${hit?.[0].slice(0, 12)}…`);
+  }
 });
 
 t("slides: cero hexadecimales fuera del bloque de tokens", () => {

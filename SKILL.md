@@ -28,72 +28,100 @@ que es lo mismo, si sus tickets no tienen `checked_in`.
 con credenciales separadas. No hay endpoint que devuelva las dos juntas y no lo
 va a haber: unirlas es el reto, no la infraestructura.
 
-Si necesitas ambas, haz dos llamadas y únelas tú en disco.
+Si necesitas ambas, haz dos llamadas y únelas tú.
 
-## El CLI
+## Cómo se llega a los datos
+
+No hay CSV que descargar de ningún lado. Se consulta el API, por el CLI o por HTTP.
+
+**Primero, el token** (una sola vez, sin registro ni espera):
 
 ```bash
-node bin/ft-hack.mjs sources                  # qué hay y con qué credencial
-node bin/ft-hack.mjs peek freeticket tickets --limit 5
-node bin/ft-hack.mjs pull boom users --out raw/boom_users.csv
-node bin/ft-hack.mjs pull freeticket tickets --out raw/ft_tickets.csv --format csv
+npx github:LucasLeguizamo/hackathon-freeticket setup tu-nombre
 ```
 
-Configuración:
+Queda guardado en `.ft-hack.json` del directorio actual. Después:
+
+```bash
+ft-hack sources                                    # recursos y filtros
+ft-hack get boom profile --email ana@gmail.com     # una persona
+ft-hack get boom tickets --user bm_usr_000123      # su historial
+ft-hack get freeticket events --month agosto       # lo que hay que proyectar
+ft-hack get freeticket artists --id ft_art_001     # un acto y su residencia
+ft-hack pull freeticket tickets --out raw/ft_tickets.csv   # el recurso completo
+```
+
+`get` trae una página (100 por defecto, tope 1000). `pull` pagina hasta traerlo
+todo y escribe CSV.
+
+**O directo por HTTP**, si prefieres tu propio cliente:
+
+```bash
+curl -H "Authorization: Bearer $FT_HACK_TOKEN" \
+  "https://f8zf2kdy.us-east.insforge.app/functions/freeticket?resource=events&month=agosto"
+```
 
 | Variable | Para qué |
 |---|---|
-| `FT_HACK_API` | URL base del servidor de datos. Sin ella, el CLI lee de `./data`. |
-| `BOOM_TOKEN` | Credencial de la plataforma de membresías. |
-| `FT_TOKEN` | Credencial de la tiquetera. |
+| `FT_HACK_API` | `https://f8zf2kdy.us-east.insforge.app` — ya viene por defecto |
+| `FT_HACK_TOKEN` | tu token; el CLI lo lee de `.ft-hack.json` si no la exportas |
 
-```bash
-export FT_HACK_API=https://f8zf2kdy.us-east.insforge.app
-export BOOM_TOKEN=…    # te lo dan en el minuto 0
-export FT_TOKEN=…
-```
+Parámetros comunes a todos los recursos: `limit` (tope 1000), `offset`,
+`order=columna.asc|desc`, `select=col1,col2`, `format=json|csv`.
 
-Cada plataforma vive detrás de **su propio endpoint y su propio token**:
-`https://f8zf2kdy.us-east.insforge.app/functions/boom?file=users` responde
-401 con el token de la tiquetera, y al revés. No hay una URL que devuelva las dos.
-
-Si el internet del café se cae: los CSV están en la USB. `--api ./data` y sigues.
+Cada plataforma tiene **su propio endpoint**: `/functions/boom` y
+`/functions/freeticket`. Ninguno devuelve datos del otro.
 
 ## Qué hay en cada plataforma
 
 ### `boom` — membresías (v2). La historia larga.
 
 **`users`** — `boom_user_id, first_name, last_name, email, phone, city, country, birthday, created_at, has_membership, membership_since, points`
+· filtros: `id, email, phone, city, membership, first_name, last_name`
+
+**`profile`** — lo mismo **más el historial ya resumido**: `tickets_total, tickets_used, use_rate, last_used_at, friends_count`
+· filtros: `id, email, phone, city, membership, min_tickets, min_use_rate`
+
+> Este es el atajo. `use_rate` es la señal que en crudo tocaría calcular a mano.
+> `ft-hack get boom profile --min_use_rate 0.8 --limit 50` te da los fieles.
 
 **`tickets`** — `boom_ticket_id, boom_user_id, event_id, type, source, created_at, used, date_used`
+· filtros: `id, user, event, used, type, source`
 
-> `used` dice si la persona **entró**, `date_used` a qué hora. Es el registro de
-> comportamiento más largo que existe: va años atrás, mucho antes de la tiquetera.
+> `used` dice si la persona **entró**, `date_used` a qué hora. Va años atrás,
+> mucho antes de la tiquetera.
 > `type` ∈ `standard | free | membership` · `source` ∈ `app | web | referral | box_office`.
 
-**`social`** — `boom_user_id, friends_count`
+**`social`** — `boom_user_id, friends_count` · filtros: `user`
 
 ### `freeticket` — tiquetera (free-admin). Julio y agosto.
 
-**`artists`** — `artist_id, name, home_city, residency_venue, residency_weekday`
+**`artists`** — `artist_id, name, home_city, residency_venue, residency_weekday, has_residency, events_total, events_past, events_upcoming, tickets_sold, checked_in_count, attendance_rate_july`
+· filtros: `id, name, city, residency`
 
 > Algunos actos tienen **residencia**: mismo venue, mismo día de la semana, todas
 > las semanas (los viernes en Casa E, los martes en Ace of Clubs…). Un show de
 > residencia de agosto tiene cuatro hermanos en julio con el mismo público. Los
-> demás son fechas sueltas de gira. `residency_*` vacío = sin residencia.
+> demás son fechas sueltas de gira, sin histórico propio.
 
-**`events`** — `event_id, title, artist_id, artist_name, city, venue, capacity, starts_at, weekday, is_residency, is_paid`
+**`events`** — `event_id, title, artist_id, artist_name, residency_venue, residency_weekday, city, venue, capacity, starts_at, weekday, is_residency, is_paid, is_upcoming, month, tickets_sold, checked_in_count, attendance_rate, fill_rate, gross_revenue`
+· filtros: `id, artist, city, venue, month, weekday, residency, upcoming`
+
+> `month` es `julio` o `agosto`. `checked_in_count` y `attendance_rate` vienen
+> **null en agosto**: el show no ha pasado, no hay verdad que dar.
 
 **`sales`** — `sale_id, event_id, buyer_name, buyer_email, buyer_phone, qty, subtotal, channel, purchased_at`
+· filtros: `id, event, email, phone, name, channel`
 
 > Una venta puede llevar varias entradas (`qty`). Una venta **no** es una persona.
 > `channel` ∈ `WEB | BOX_OFFICE | ADMIN | RRPP`. Precios en COP.
 
 **`tickets`** — `ticket_id, sale_id, event_id, ticket_type, price, checked_in, checked_in_at`
+· filtros: `id, event, sale, type, checked_in`
 
 > **Una fila por entrada**, no un total por evento. `ticket_type` ∈
 > `General | Preferencial | VIP | Cortesía`.
-> `checked_in` es `true`/`false` en julio y **vacío** en agosto.
+> `checked_in` es `true`/`false` en julio y **null** en agosto.
 > Es la tabla que convierte esto en un problema con etiquetas.
 
 **Los `event_id` de Boom y los de FreeTicket son universos distintos.** `bm_evt_*`
