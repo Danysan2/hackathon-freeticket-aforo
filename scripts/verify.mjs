@@ -484,7 +484,7 @@ t("el contrato para agentes cubre todos los recursos y filtros", () => {
       }
     }
   }
-  assert(/functions\/setup\?handle=/.test(txt), "no explica cómo sacar el token");
+  assert(/\/api\/setup\?handle=/.test(txt), "no explica cómo sacar el token");
   assert(/UNA plataforma/.test(txt), "no enuncia la regla");
 });
 

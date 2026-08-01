@@ -11,7 +11,9 @@
     "load": "CARGAR=1 node scripts/load.mjs",
     "functions": "DESPLEGAR=1 node scripts/build-functions.mjs",
     "verify": "node scripts/verify.mjs",
-    "slides": "open slides/index.html"
+    "slides": "open slides/index.html",
+    "web": "node scripts/build-web.mjs",
+    "deploy": "node scripts/build-web.mjs && vercel deploy --prod"
   },
   "engines": {
     "node": ">=20"

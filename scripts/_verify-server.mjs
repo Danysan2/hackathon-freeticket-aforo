@@ -57,7 +57,7 @@ createServer((req, res) => {
   const url = new URL(req.url, "http://x");
   const q = url.searchParams;
 
-  if (url.pathname === "/functions/setup") {
+  if (url.pathname === "/api/setup") {
     const handle = (q.get("handle") ?? "").trim().toLowerCase();
     if (handle.length < 2) return json(res, { error: "handle muy corto" }, 400);
     const nuevo = !participantes.has(handle);
@@ -68,7 +68,7 @@ createServer((req, res) => {
     });
   }
 
-  const plataforma = url.pathname.replace("/functions/", "");
+  const plataforma = url.pathname.replace("/api/", "");
   if (!CATALOGO[plataforma]) return json(res, { error: "no existe" }, 404);
 
   const recurso = q.get("resource");

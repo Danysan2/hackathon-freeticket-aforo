@@ -152,7 +152,8 @@ function indice() {
   return {
     plataforma: PLATAFORMA,
     uso: "GET ?resource=<recurso>&<filtro>=<valor>&limit=100&offset=0&format=json|csv",
-    autenticacion: "Authorization: Bearer <token> · consíguelo con `ft-hack setup`",
+    autenticacion: "Authorization: Bearer <token> · consíguelo en https://hackathon-freeticket.vercel.app/api/setup?handle=tu-nombre",
+    contrato: "https://hackathon-freeticket.vercel.app",
     regla: "Una petición toca una sola plataforma. El cruce entre Boom y la tiquetera es tuyo.",
     recursos: Object.fromEntries(
       Object.entries(RECURSOS).map(([nombre, r]) => [
