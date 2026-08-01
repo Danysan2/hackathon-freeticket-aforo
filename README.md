@@ -1,5 +1,32 @@
 # Hackathon FreeTicket — «¿Cuánta gente entra realmente?»
 
+## Nuestra solución: Aforo
+
+Un sistema de predicción de asistencia por función que cruza las ventas de FreeTicket con el historial de Boom, conserva la incertidumbre del cruce de identidad y permite simular cuántas cortesías o entradas de membresía liberar.
+
+- **Modelo ganador:** CatBoost, escogido contra XGBoost, regresión logística y una línea base.
+- **Validación realista:** 5 folds separados por `event_id`, sin mezclar tickets del mismo show.
+- **Resultado:** error medio de **6,24 asistentes por función** y WAPE de **4,02 %** sobre julio.
+- **Entrega:** `forecast.csv` con asistencia esperada y rango p10–p90 para los 30 eventos de agosto.
+- **Demo:** app React en [`web/`](web/) con panel operativo, simuladores y proyección CatBoost integrada.
+
+```bash
+# Reproducir el pipeline del modelo
+python scripts/clean_data.py
+python scripts/build_matches.py
+python scripts/build_training_tables.py
+python scripts/train_models.py
+python scripts/build_web_model.py
+
+# Ejecutar la demo
+npm install --prefix web
+npm run dev --prefix web
+```
+
+La explicación ejecutiva está en [`presentacion.md`](presentacion.md) y la comparación reproducible en [`reports/model_report.md`](reports/model_report.md).
+
+---
+
 **Sábado 1 de agosto de 2026 · 12:30 – 16:30 · café internet · individual**
 
 Se venden 500 tickets. ¿Entran 500, 380 o 240? Hoy nadie lo sabe, y la puerta se

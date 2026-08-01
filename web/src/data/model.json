@@ -1,0 +1,126 @@
+{
+  "version": "2026-08-01T21:10:15Z",
+  "rates": {},
+  "events": {
+    "ft_evt_0006": {
+      "baseline": 48.6,
+      "sd": 7.06
+    },
+    "ft_evt_0007": {
+      "baseline": 31.4,
+      "sd": 7.06
+    },
+    "ft_evt_0008": {
+      "baseline": 51.7,
+      "sd": 6.28
+    },
+    "ft_evt_0009": {
+      "baseline": 33.0,
+      "sd": 5.38
+    },
+    "ft_evt_0014": {
+      "baseline": 77.8,
+      "sd": 7.06
+    },
+    "ft_evt_0015": {
+      "baseline": 77.5,
+      "sd": 7.06
+    },
+    "ft_evt_0016": {
+      "baseline": 48.7,
+      "sd": 7.06
+    },
+    "ft_evt_0017": {
+      "baseline": 34.5,
+      "sd": 7.06
+    },
+    "ft_evt_0023": {
+      "baseline": 164.3,
+      "sd": 7.06
+    },
+    "ft_evt_0024": {
+      "baseline": 66.8,
+      "sd": 7.06
+    },
+    "ft_evt_0025": {
+      "baseline": 87.9,
+      "sd": 7.06
+    },
+    "ft_evt_0026": {
+      "baseline": 54.3,
+      "sd": 7.06
+    },
+    "ft_evt_0032": {
+      "baseline": 153.9,
+      "sd": 7.06
+    },
+    "ft_evt_0033": {
+      "baseline": 74.4,
+      "sd": 7.02
+    },
+    "ft_evt_0034": {
+      "baseline": 46.6,
+      "sd": 7.02
+    },
+    "ft_evt_0035": {
+      "baseline": 54.1,
+      "sd": 7.02
+    },
+    "ft_evt_0040": {
+      "baseline": 99.8,
+      "sd": 7.06
+    },
+    "ft_evt_0041": {
+      "baseline": 76.9,
+      "sd": 7.06
+    },
+    "ft_evt_0042": {
+      "baseline": 56.9,
+      "sd": 7.06
+    },
+    "ft_evt_0043": {
+      "baseline": 25.1,
+      "sd": 7.06
+    },
+    "ft_evt_0044": {
+      "baseline": 47.3,
+      "sd": 7.06
+    },
+    "ft_evt_0046": {
+      "baseline": 317.5,
+      "sd": 7.06
+    },
+    "ft_evt_0048": {
+      "baseline": 161.6,
+      "sd": 7.06
+    },
+    "ft_evt_0050": {
+      "baseline": 389.2,
+      "sd": 7.06
+    },
+    "ft_evt_0052": {
+      "baseline": 318.7,
+      "sd": 7.06
+    },
+    "ft_evt_0054": {
+      "baseline": 96.1,
+      "sd": 7.06
+    },
+    "ft_evt_0056": {
+      "baseline": 350.3,
+      "sd": 7.06
+    },
+    "ft_evt_0058": {
+      "baseline": 105.6,
+      "sd": 7.02
+    },
+    "ft_evt_0060": {
+      "baseline": 231.6,
+      "sd": 7.02
+    },
+    "ft_evt_0062": {
+      "baseline": 105.3,
+      "sd": 7.06
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "inputs": {
+    "sales": 6383,
+    "boom_users": 6000
+  },
+  "thresholds": {
+    "minimum_confidence": 0.7,
+    "minimum_margin": 0.08
+  },
+  "results": {
+    "matched": 3951,
+    "unmatched": 2432,
+    "coverage_rate": 0.619,
+    "high_confidence": 3929,
+    "probable": 22,
+    "unique_boom_users_matched": 2789,
+    "new_or_unknown": 2362,
+    "unresolved_identity": 70
+  },
+  "learned_aliases": {
+    "safe_seed_sales": 3635,
+    "learned_email_aliases": 2978,
+    "learned_phone_aliases": 2830,
+    "alias_matches_recovered": 17,
+    "alias_conflicts": 3,
+    "alias_candidates_rejected": 0
+  },
+  "decisions": {
+    "MATCH": 3934,
+    "SIN_CANDIDATO_DE_CONTACTO": 2362,
+    "EVIDENCIA_INSUFICIENTE": 38,
+    "AMBIGUO": 32,
+    "MATCH_ALIAS": 17
+  },
+  "methods": {
+    "EMAIL_EXACTO+TELEFONO_EXACTO+NOMBRE_FUERTE": 2371,
+    "EMAIL_EXACTO+NOMBRE_FUERTE": 449,
+    "EMAIL_EXACTO+TELEFONO_APROX_1_EDICION+NOMBRE_FUERTE": 291,
+    "TELEFONO_EXACTO+NOMBRE_FUERTE": 264,
+    "EMAIL_APROX_1_EDICION+TELEFONO_EXACTO+NOMBRE_FUERTE": 228,
+    "EMAIL_EXACTO+TELEFONO_EXACTO+NOMBRE_PARCIAL": 144,
+    "EMAIL_APROX_1_EDICION+NOMBRE_FUERTE": 47,
+    "TELEFONO_APROX_1_EDICION+NOMBRE_FUERTE": 37,
+    "EMAIL_APROX_1_EDICION+TELEFONO_APROX_1_EDICION+NOMBRE_FUERTE": 32,
+    "EMAIL_EXACTO+NOMBRE_PARCIAL": 22,
+    "TELEFONO_EXACTO+NOMBRE_PARCIAL": 19,
+    "EMAIL_APROX_1_EDICION+TELEFONO_EXACTO+NOMBRE_PARCIAL": 16,
+    "NOMBRE+EMAIL_ALIAS": 13,
+    "EMAIL_EXACTO+TELEFONO_APROX_1_EDICION+NOMBRE_PARCIAL": 10,
+    "NOMBRE+TELEFONO_ALIAS": 4,
+    "TELEFONO_APROX_1_EDICION+NOMBRE_PARCIAL": 2,
+    "EMAIL_APROX_1_EDICION+TELEFONO_APROX_1_EDICION+NOMBRE_PARCIAL": 1,
+    "EMAIL_APROX_1_EDICION+NOMBRE_PARCIAL": 1
+  },
+  "exact_email_phone_conflicts": {
+    "total": 441,
+    "resolved": 405,
+    "unresolved": 36
+  },
+  "validation": [
+    {
+      "check": "una fila por venta",
+      "passed": true,
+      "evidence": 6383
+    },
+    {
+      "check": "sale_id único",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "todas las ventas cubiertas",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "usuarios existentes o SIN_MATCH",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "cero nulos",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "confianza válida",
+      "passed": true,
+      "evidence": [
+        0.0,
+        0.995
+      ]
+    },
+    {
+      "check": "SIN_MATCH tiene confianza cero",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "match supera umbral",
+      "passed": true,
+      "evidence": 0.7
+    },
+    {
+      "check": "diagnóstico uno a uno",
+      "passed": true,
+      "evidence": 6383
+    },
+    {
+      "check": "candidatos cubren todas las ventas",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "candidato único por venta y usuario",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "toda venta conserva SIN_MATCH",
+      "passed": true,
+      "evidence": 6383
+    },
+    {
+      "check": "probabilidades suman uno",
+      "passed": true,
+      "evidence": 1.0000000000287557e-06
+    },
+    {
+      "check": "pesos del modelo válidos",
+      "passed": true,
+      "evidence": [
+        0.0,
+        0.949789
+      ]
+    },
+    {
+      "check": "compradores no resueltos permanecen SIN_MATCH",
+      "passed": true,
+      "evidence": 2432
+    }
+  ],
+  "limitations": [
+    "FreeTicket no incluye ciudad del comprador; la ciudad del evento no se usa como identidad.",
+    "Un nombre por sí solo nunca crea un match automático.",
+    "La identidad corresponde al comprador de la venta, no necesariamente a sus acompañantes.",
+    "Email o teléfono de pareja/familiar se descarta cuando el nombre contradice y no hay corroboración."
+  ]
+}

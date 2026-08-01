@@ -1,0 +1,6 @@
+{
+  "winner": "catboost",
+  "selection_rule": "event_mae, event_wape, ticket_brier",
+  "features_config": "D:\\proyectos-personales\\hackaton-freeticket\\model_ready\\training_features.json",
+  "catboost_final_iterations": 175
+}

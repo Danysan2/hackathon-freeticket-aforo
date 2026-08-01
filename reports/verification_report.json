@@ -1,0 +1,550 @@
+{
+  "generated_at_utc": "2026-08-01T21:11:58.399671+00:00",
+  "status": "PASS",
+  "checks_total": 100,
+  "checks_passed": 100,
+  "failures": [],
+  "checks": [
+    {
+      "check": "archivos clean completos",
+      "status": "PASS",
+      "evidence": [
+        "boom_profile.csv",
+        "boom_social.csv",
+        "boom_tickets.csv",
+        "boom_users.csv",
+        "ft_artists.csv",
+        "ft_events.csv",
+        "ft_sales.csv",
+        "ft_tickets.csv"
+      ]
+    },
+    {
+      "check": "archivos model_ready mínimos completos",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "check": "boom_users.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv: llave primaria única",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv: llave primaria única",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_tickets.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_tickets.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_tickets.csv: llave primaria única",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_social.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_social.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_social.csv: llave primaria única",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_artists.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_artists.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_artists.csv: llave primaria única",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv: llave primaria única",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.csv: llave primaria única",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_tickets.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_tickets.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_tickets.csv: llave primaria única",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/boom_profile.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/boom_profile.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/boom_social.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/boom_social.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/boom_tickets_history.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/boom_tickets_history.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/boom_users.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/boom_users.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_artists.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_artists.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_events_score_august.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_events_score_august.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_events_train_july.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_events_train_july.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_sales.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_sales.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_tickets_score_august.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_tickets_score_august.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_tickets_train_july.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/ft_tickets_train_july.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/scoring_tickets.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/scoring_tickets.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/training_tickets.csv: cero celdas vacías",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready/training_tickets.csv: cero duplicados exactos",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv.first_name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv.last_name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv.full_name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv.city: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv.country: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv.first_name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv.last_name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv.full_name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv.city: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv.country: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_artists.csv.name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_artists.csv.home_city: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_artists.csv.residency_venue: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_artists.csv.residency_weekday: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv.title: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv.artist_name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv.city: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv.venue: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv.weekday: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv.month: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.csv.buyer_name: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.csv.channel: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_tickets.csv.ticket_type: mayúsculas",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv.email: formato canónico",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users.csv.phone: formato canónico",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv.email: formato canónico",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv.phone: formato canónico",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.csv.buyer_email: formato canónico",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.csv.buyer_phone: formato canónico",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_users: identidad mínima",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales: identidad mínima",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_profile.csv.boom_user_id: integridad referencial",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_social.csv.boom_user_id: integridad referencial",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_tickets.csv.boom_user_id: integridad referencial",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_events.csv.artist_id: integridad referencial",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.csv.event_id: integridad referencial",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_tickets.csv.event_id: integridad referencial",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_tickets.csv.sale_id: integridad referencial",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_tickets: sale_id y event_id consistentes",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.qty reconcilia con tickets",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "ft_sales.subtotal reconcilia con tickets",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "boom_tickets: fuga futura detectada y marcada",
+      "status": "PASS",
+      "evidence": 666
+    },
+    {
+      "check": "model_ready Boom: cero resultados futuros",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "model_ready Boom: solo cohorte madura",
+      "status": "PASS",
+      "evidence": 0
+    },
+    {
+      "check": "eventos train son julio",
+      "status": "PASS",
+      "evidence": [
+        "JULIO"
+      ]
+    },
+    {
+      "check": "eventos score son agosto",
+      "status": "PASS",
+      "evidence": [
+        "AGOSTO"
+      ]
+    },
+    {
+      "check": "eventos score no contienen objetivos",
+      "status": "PASS",
+      "evidence": [
+        "event_id",
+        "title",
+        "artist_id",
+        "artist_name",
+        "residency_venue",
+        "residency_weekday",
+        "city",
+        "venue",
+        "capacity",
+        "starts_at",
+        "weekday",
+        "is_residency",
+        "is_paid",
+        "is_upcoming",
+        "month",
+        "tickets_sold",
+        "fill_rate",
+        "gross_revenue"
+      ]
+    },
+    {
+      "check": "tickets train tienen etiquetas",
+      "status": "PASS",
+      "evidence": [
+        "FALSE",
+        "TRUE"
+      ]
+    },
+    {
+      "check": "tickets score no contienen objetivos",
+      "status": "PASS",
+      "evidence": [
+        "ticket_id",
+        "sale_id",
+        "event_id",
+        "ticket_type",
+        "price"
+      ]
+    },
+    {
+      "check": "tasas dentro de rangos válidos",
+      "status": "PASS",
+      "evidence": 0
+    }
+  ]
+}

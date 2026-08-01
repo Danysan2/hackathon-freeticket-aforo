@@ -1,8 +1,18 @@
 node_modules/
+.python_packages/
+__pycache__/
+*.pyc
+*.inspect.ndjson
+.clean_data_progress.log
 raw/
+clean/
+model_ready/
+new_or_unmatched_buyers.csv
 # La data NO vive en el repo: se consulta por el CLI o por el API pública.
 # Aquí solo queda el generador, para que el organizador la pueda regenerar.
-data/
+# Anclado a la raíz: web/src/data/ SÍ se versiona (es la foto que la app necesita
+# para construir en Vercel, donde no existe raw/).
+/data/
 # Token del participante: personal, no se comparte.
 .ft-hack.json
 # El deck del brief es del organizador: se proyecta el sábado, no se publica.

@@ -1,0 +1,171 @@
+{
+  "status": "PASS",
+  "checks_total": 22,
+  "checks_passed": 22,
+  "failures": [],
+  "checks": [
+    {
+      "check": "cuatro modelos comparados",
+      "passed": true,
+      "evidence": [
+        "catboost",
+        "xgboost",
+        "ticket_type_baseline",
+        "logistic_regression"
+      ]
+    },
+    {
+      "check": "ranks únicos 1..4",
+      "passed": true,
+      "evidence": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "check": "ranking sigue criterio declarado",
+      "passed": true,
+      "evidence": [
+        "catboost",
+        "xgboost",
+        "ticket_type_baseline",
+        "logistic_regression"
+      ]
+    },
+    {
+      "check": "ganador consistente en metadatos",
+      "passed": true,
+      "evidence": [
+        "catboost",
+        "catboost",
+        "catboost"
+      ]
+    },
+    {
+      "check": "OOF cubre todos los tickets",
+      "passed": true,
+      "evidence": 6722
+    },
+    {
+      "check": "OOF probabilidades completas",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "OOF probabilidades válidas",
+      "passed": true,
+      "evidence": [
+        0.0729148124914093,
+        0.9963877884574788
+      ]
+    },
+    {
+      "check": "OOF evento contiene 32 por modelo",
+      "passed": true,
+      "evidence": {
+        "catboost": 32,
+        "logistic_regression": 32,
+        "ticket_type_baseline": 32,
+        "xgboost": 32
+      }
+    },
+    {
+      "check": "total real OOF reconciliado",
+      "passed": true,
+      "evidence": 4969.0
+    },
+    {
+      "check": "predicción OOF ticket/evento reconciliada",
+      "passed": true,
+      "evidence": 0.0
+    },
+    {
+      "check": "artefactos de los cuatro modelos existen",
+      "passed": true,
+      "evidence": {
+        "ticket_type_baseline.json": 224,
+        "logistic_regression.joblib": 11457,
+        "catboost.cbm": 71032,
+        "xgboost.joblib": 399276,
+        "environment.json": 166
+      }
+    },
+    {
+      "check": "predicciones agosto cubren tickets",
+      "passed": true,
+      "evidence": 5209
+    },
+    {
+      "check": "predicciones agosto válidas",
+      "passed": true,
+      "evidence": [
+        0.0688597410639778,
+        0.9919967297629334
+      ]
+    },
+    {
+      "check": "modelo ganador serializado reproduce probabilidades",
+      "passed": true,
+      "evidence": 1.1102230246251565e-16
+    },
+    {
+      "check": "forecast contiene 30 eventos",
+      "passed": true,
+      "evidence": 30
+    },
+    {
+      "check": "contrato forecast exacto",
+      "passed": true,
+      "evidence": [
+        "event_id",
+        "expected_attendance",
+        "p10",
+        "p90"
+      ]
+    },
+    {
+      "check": "intervalos ordenados",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "forecast limitado a tickets adquiridos",
+      "passed": true,
+      "evidence": [
+        15.2,
+        0.0
+      ]
+    },
+    {
+      "check": "expected attendance suma probabilidades",
+      "passed": true,
+      "evidence": 0.04881916029160038
+    },
+    {
+      "check": "eventos train y score no se cruzan",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "folds cubren cada evento una vez",
+      "passed": true,
+      "evidence": 32
+    },
+    {
+      "check": "estabilidad compara 32 eventos",
+      "passed": true,
+      "evidence": {
+        "runner_up": "xgboost",
+        "winner_better_events": 19,
+        "events_compared": 32,
+        "mean_mae_difference_winner_minus_runner": -0.9902743839072747,
+        "bootstrap_95_ci": [
+          -1.8913444587987696,
+          -0.10151424043194128
+        ]
+      }
+    }
+  ]
+}

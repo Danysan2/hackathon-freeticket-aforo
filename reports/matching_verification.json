@@ -1,0 +1,123 @@
+{
+  "status": "PASS",
+  "checks_total": 21,
+  "checks_passed": 21,
+  "failures": [],
+  "checks": [
+    {
+      "check": "esquema contractual exacto",
+      "passed": true,
+      "evidence": [
+        "sale_id",
+        "boom_user_id",
+        "confidence"
+      ]
+    },
+    {
+      "check": "una fila por venta",
+      "passed": true,
+      "evidence": 6383
+    },
+    {
+      "check": "sale_id único",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "mismo conjunto de ventas",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "cero celdas vacías",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "confianza numérica 0..1",
+      "passed": true,
+      "evidence": [
+        0.0,
+        0.995
+      ]
+    },
+    {
+      "check": "usuarios Boom válidos",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "SIN_MATCH con confianza cero",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "matches con confianza mínima",
+      "passed": true,
+      "evidence": 0.8
+    },
+    {
+      "check": "diagnóstico completo",
+      "passed": true,
+      "evidence": 6383
+    },
+    {
+      "check": "decisión coincide con salida",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "usuario coincide con diagnóstico",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "ningún match por nombre solamente",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "candidatos probabilísticos cubren ventas",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "probabilidades suman uno",
+      "passed": true,
+      "evidence": 1.0000000000287557e-06
+    },
+    {
+      "check": "toda venta conserva candidato SIN_MATCH",
+      "passed": true,
+      "evidence": 6383
+    },
+    {
+      "check": "pesos probabilísticos válidos",
+      "passed": true,
+      "evidence": [
+        0.0,
+        0.949789
+      ]
+    },
+    {
+      "check": "archivo de nuevos/no identificados coincide",
+      "passed": true,
+      "evidence": 2432
+    },
+    {
+      "check": "alias tienen peso reducido",
+      "passed": true,
+      "evidence": 0.35
+    },
+    {
+      "check": "peso probabilístico total de alias limitado",
+      "passed": true,
+      "evidence": 0.33981300000000003
+    },
+    {
+      "check": "identidades repetidas son consistentes",
+      "passed": true,
+      "evidence": 0
+    }
+  ]
+}

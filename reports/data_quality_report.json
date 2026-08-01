@@ -1,0 +1,2460 @@
+{
+  "generated_at_utc": "2026-08-01T19:13:46.635402+00:00",
+  "as_of_utc": "2026-08-01T05:00:00+00:00",
+  "mature_created_cutoff": "2026-07-01T23:59:59+00:00",
+  "rules": {
+    "names": "uppercase NFC plus match keys without accents and sorted tokens",
+    "emails": {
+      "lowercase": true,
+      "remove_plus_alias": true,
+      "domain_typo_map": {
+        "gmial.com": "gmail.com",
+        "hotmial.com": "hotmail.com",
+        "outlok.com": "outlook.com"
+      },
+      "ambiguous_local_typo": "flag/do not invent"
+    },
+    "phones": "Colombia 10 digits; strip +57/57 and formatting; transpositions remain probabilistic",
+    "dates": "ISO 8601 UTC; birthdays YYYY-MM-DD",
+    "missing_text": [
+      "SIN_DATO",
+      "NO_APLICA",
+      "NO_OBSERVADO"
+    ],
+    "duplicates": "remove exact; quarantine conflicting primary keys",
+    "outliers": "IQR detect; retain if domain-valid; reject impossible negatives/rates"
+  },
+  "files": {
+    "boom_users": {
+      "raw_profile": {
+        "rows": 6000,
+        "columns": [
+          "boom_user_id",
+          "first_name",
+          "last_name",
+          "email",
+          "phone",
+          "city",
+          "country",
+          "birthday",
+          "created_at",
+          "has_membership",
+          "membership_since",
+          "points"
+        ],
+        "column_count": 12,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "boom_user_id": 0,
+          "first_name": 0,
+          "last_name": 0,
+          "email": 0,
+          "phone": 0,
+          "city": 0,
+          "country": 0,
+          "birthday": 0,
+          "created_at": 0,
+          "has_membership": 0,
+          "membership_since": 4674,
+          "points": 0
+        },
+        "blank_cells": 4674,
+        "unique_by_column": {
+          "boom_user_id": 6000,
+          "first_name": 40,
+          "last_name": 30,
+          "email": 6000,
+          "phone": 6000,
+          "city": 8,
+          "country": 1,
+          "birthday": 4708,
+          "created_at": 411,
+          "has_membership": 2,
+          "membership_since": 343,
+          "points": 208
+        },
+        "numeric": {
+          "points": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 31.0,
+            "median": 45.0,
+            "q3": 66.0,
+            "max": 301,
+            "outliers_iqr": 1326,
+            "iqr_low": -21.5,
+            "iqr_high": 118.5
+          }
+        },
+        "categories": {
+          "city": {
+            "Bogotá": 2532,
+            "Medellín": 1112,
+            "Cali": 761,
+            "Barranquilla": 450,
+            "Bucaramanga": 360,
+            "Cartagena": 310,
+            "Pereira": 301,
+            "Manizales": 174
+          },
+          "has_membership": {
+            "false": 4674,
+            "true": 1326
+          }
+        }
+      },
+      "clean_profile": {
+        "rows": 6000,
+        "columns": [
+          "boom_user_id",
+          "first_name",
+          "last_name",
+          "email",
+          "phone",
+          "city",
+          "country",
+          "birthday",
+          "created_at",
+          "has_membership",
+          "membership_since",
+          "points",
+          "email_match_key",
+          "email_valid",
+          "phone_match_key",
+          "phone_valid",
+          "full_name",
+          "name_match_key",
+          "name_tokens_key",
+          "identity_fields_available"
+        ],
+        "column_count": 20,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "boom_user_id": 0,
+          "first_name": 0,
+          "last_name": 0,
+          "email": 0,
+          "phone": 0,
+          "city": 0,
+          "country": 0,
+          "birthday": 0,
+          "created_at": 0,
+          "has_membership": 0,
+          "membership_since": 0,
+          "points": 0,
+          "email_match_key": 0,
+          "email_valid": 0,
+          "phone_match_key": 0,
+          "phone_valid": 0,
+          "full_name": 0,
+          "name_match_key": 0,
+          "name_tokens_key": 0,
+          "identity_fields_available": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "boom_user_id": 6000,
+          "first_name": 40,
+          "last_name": 30,
+          "email": 6000,
+          "phone": 6000,
+          "city": 8,
+          "country": 1,
+          "birthday": 4708,
+          "created_at": 411,
+          "has_membership": 2,
+          "membership_since": 343,
+          "points": 208,
+          "email_match_key": 6000,
+          "email_valid": 1,
+          "phone_match_key": 6000,
+          "phone_valid": 1,
+          "full_name": 1189,
+          "name_match_key": 1189,
+          "name_tokens_key": 1189,
+          "identity_fields_available": 1
+        },
+        "numeric": {
+          "points": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 31.0,
+            "median": 45.0,
+            "q3": 66.0,
+            "max": 301,
+            "outliers_iqr": 1326,
+            "iqr_low": -21.5,
+            "iqr_high": 118.5
+          }
+        },
+        "categories": {
+          "city": {
+            "BOGOTÁ": 2532,
+            "MEDELLÍN": 1112,
+            "CALI": 761,
+            "BARRANQUILLA": 450,
+            "BUCARAMANGA": 360,
+            "CARTAGENA": 310,
+            "PEREIRA": 301,
+            "MANIZALES": 174
+          },
+          "has_membership": {
+            "FALSE": 4674,
+            "TRUE": 1326
+          }
+        }
+      },
+      "changes": {
+        "rows_raw": 6000,
+        "rows_clean": 6000,
+        "exact_duplicates_removed": 0,
+        "duplicate_primary_keys_removed": 0,
+        "rows_quarantined": 0,
+        "rows_dropped_insufficient_identity": 0,
+        "blanks_raw": 4674,
+        "blanks_clean": 0,
+        "transformations": {
+          "names_uppercased": 12000,
+          "email_uppercase": 0,
+          "email_plus_alias": 0,
+          "email_domain_typo": 0,
+          "email_invalid": 0,
+          "phone_formatted": 0,
+          "phone_missing": 0,
+          "phone_invalid": 0
+        },
+        "notes": []
+      }
+    },
+    "boom_profile": {
+      "raw_profile": {
+        "rows": 6000,
+        "columns": [
+          "boom_user_id",
+          "first_name",
+          "last_name",
+          "email",
+          "phone",
+          "city",
+          "country",
+          "birthday",
+          "created_at",
+          "has_membership",
+          "membership_since",
+          "points",
+          "tickets_total",
+          "tickets_used",
+          "use_rate",
+          "last_used_at",
+          "friends_count"
+        ],
+        "column_count": 17,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "boom_user_id": 0,
+          "first_name": 0,
+          "last_name": 0,
+          "email": 0,
+          "phone": 0,
+          "city": 0,
+          "country": 0,
+          "birthday": 0,
+          "created_at": 0,
+          "has_membership": 0,
+          "membership_since": 4674,
+          "points": 0,
+          "tickets_total": 0,
+          "tickets_used": 0,
+          "use_rate": 14,
+          "last_used_at": 343,
+          "friends_count": 0
+        },
+        "blank_cells": 5031,
+        "unique_by_column": {
+          "boom_user_id": 6000,
+          "first_name": 40,
+          "last_name": 30,
+          "email": 6000,
+          "phone": 6000,
+          "city": 8,
+          "country": 1,
+          "birthday": 4708,
+          "created_at": 411,
+          "has_membership": 2,
+          "membership_since": 343,
+          "points": 208,
+          "tickets_total": 16,
+          "tickets_used": 13,
+          "use_rate": 55,
+          "last_used_at": 4649,
+          "friends_count": 15
+        },
+        "numeric": {
+          "points": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 31.0,
+            "median": 45.0,
+            "q3": 66.0,
+            "max": 301,
+            "outliers_iqr": 1326,
+            "iqr_low": -21.5,
+            "iqr_high": 118.5
+          },
+          "tickets_total": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 2.0,
+            "median": 3.0,
+            "q3": 4.0,
+            "max": 15,
+            "outliers_iqr": 784,
+            "iqr_low": -1.0,
+            "iqr_high": 7.0
+          },
+          "tickets_used": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 1.0,
+            "median": 2.0,
+            "q3": 3.0,
+            "max": 13,
+            "outliers_iqr": 192,
+            "iqr_low": -2.0,
+            "iqr_high": 6.0
+          },
+          "use_rate": {
+            "valid": 5986,
+            "missing_or_invalid": 14,
+            "min": 0.0,
+            "q1": 0.5,
+            "median": 0.6667,
+            "q3": 1.0,
+            "max": 1.0,
+            "outliers_iqr": 0,
+            "iqr_low": -0.25,
+            "iqr_high": 1.75
+          },
+          "friends_count": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 3.0,
+            "median": 4.0,
+            "q3": 5.0,
+            "max": 14,
+            "outliers_iqr": 127,
+            "iqr_low": 0.0,
+            "iqr_high": 8.0
+          }
+        },
+        "categories": {
+          "city": {
+            "Bogotá": 2532,
+            "Medellín": 1112,
+            "Cali": 761,
+            "Barranquilla": 450,
+            "Bucaramanga": 360,
+            "Cartagena": 310,
+            "Pereira": 301,
+            "Manizales": 174
+          },
+          "has_membership": {
+            "false": 4674,
+            "true": 1326
+          },
+          "tickets_total": {
+            "2": 1920,
+            "3": 1498,
+            "1": 619,
+            "4": 558,
+            "7": 267,
+            "8": 235,
+            "9": 216,
+            "5": 186,
+            "10": 162,
+            "6": 154,
+            "11": 101,
+            "12": 52,
+            "13": 15,
+            "0": 14,
+            "14": 2,
+            "15": 1
+          },
+          "tickets_used": {
+            "2": 1948,
+            "1": 1500,
+            "3": 1109,
+            "4": 470,
+            "0": 343,
+            "5": 273,
+            "6": 165,
+            "7": 102,
+            "8": 57,
+            "9": 24,
+            "10": 7,
+            "13": 1,
+            "11": 1
+          },
+          "friends_count": {
+            "4": 1281,
+            "3": 1169,
+            "5": 964,
+            "2": 924,
+            "6": 582,
+            "1": 386,
+            "7": 309,
+            "8": 131,
+            "0": 127,
+            "9": 72,
+            "10": 33,
+            "11": 13,
+            "12": 5,
+            "13": 3,
+            "14": 1
+          }
+        }
+      },
+      "clean_profile": {
+        "rows": 6000,
+        "columns": [
+          "boom_user_id",
+          "first_name",
+          "last_name",
+          "email",
+          "phone",
+          "city",
+          "country",
+          "birthday",
+          "created_at",
+          "has_membership",
+          "membership_since",
+          "points",
+          "tickets_total",
+          "tickets_used",
+          "use_rate",
+          "last_used_at",
+          "friends_count",
+          "email_match_key",
+          "email_valid",
+          "phone_match_key",
+          "phone_valid",
+          "full_name",
+          "name_match_key",
+          "name_tokens_key",
+          "identity_fields_available",
+          "model_tickets_total",
+          "model_tickets_used",
+          "model_use_rate",
+          "model_last_used_at",
+          "future_used_leak_count",
+          "model_history_available",
+          "model_history_cutoff"
+        ],
+        "column_count": 32,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "boom_user_id": 0,
+          "first_name": 0,
+          "last_name": 0,
+          "email": 0,
+          "phone": 0,
+          "city": 0,
+          "country": 0,
+          "birthday": 0,
+          "created_at": 0,
+          "has_membership": 0,
+          "membership_since": 0,
+          "points": 0,
+          "tickets_total": 0,
+          "tickets_used": 0,
+          "use_rate": 0,
+          "last_used_at": 0,
+          "friends_count": 0,
+          "email_match_key": 0,
+          "email_valid": 0,
+          "phone_match_key": 0,
+          "phone_valid": 0,
+          "full_name": 0,
+          "name_match_key": 0,
+          "name_tokens_key": 0,
+          "identity_fields_available": 0,
+          "model_tickets_total": 0,
+          "model_tickets_used": 0,
+          "model_use_rate": 0,
+          "model_last_used_at": 0,
+          "future_used_leak_count": 0,
+          "model_history_available": 0,
+          "model_history_cutoff": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "boom_user_id": 6000,
+          "first_name": 40,
+          "last_name": 30,
+          "email": 6000,
+          "phone": 6000,
+          "city": 8,
+          "country": 1,
+          "birthday": 4708,
+          "created_at": 411,
+          "has_membership": 2,
+          "membership_since": 343,
+          "points": 208,
+          "tickets_total": 16,
+          "tickets_used": 13,
+          "use_rate": 54,
+          "last_used_at": 4649,
+          "friends_count": 15,
+          "email_match_key": 6000,
+          "email_valid": 1,
+          "phone_match_key": 6000,
+          "phone_valid": 1,
+          "full_name": 1189,
+          "name_match_key": 1189,
+          "name_tokens_key": 1189,
+          "identity_fields_available": 1,
+          "model_tickets_total": 14,
+          "model_tickets_used": 13,
+          "model_use_rate": 49,
+          "model_last_used_at": 4492,
+          "future_used_leak_count": 4,
+          "model_history_available": 2,
+          "model_history_cutoff": 1
+        },
+        "numeric": {
+          "points": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 31.0,
+            "median": 45.0,
+            "q3": 66.0,
+            "max": 301,
+            "outliers_iqr": 1326,
+            "iqr_low": -21.5,
+            "iqr_high": 118.5
+          },
+          "tickets_total": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 2.0,
+            "median": 3.0,
+            "q3": 4.0,
+            "max": 15,
+            "outliers_iqr": 784,
+            "iqr_low": -1.0,
+            "iqr_high": 7.0
+          },
+          "tickets_used": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 1.0,
+            "median": 2.0,
+            "q3": 3.0,
+            "max": 13,
+            "outliers_iqr": 192,
+            "iqr_low": -2.0,
+            "iqr_high": 6.0
+          },
+          "use_rate": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0.0,
+            "q1": 0.5,
+            "median": 0.6667,
+            "q3": 1.0,
+            "max": 1.0,
+            "outliers_iqr": 0,
+            "iqr_low": -0.25,
+            "iqr_high": 1.75
+          },
+          "friends_count": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 3.0,
+            "median": 4.0,
+            "q3": 5.0,
+            "max": 14,
+            "outliers_iqr": 127,
+            "iqr_low": 0.0,
+            "iqr_high": 8.0
+          }
+        },
+        "categories": {
+          "city": {
+            "BOGOTÁ": 2532,
+            "MEDELLÍN": 1112,
+            "CALI": 761,
+            "BARRANQUILLA": 450,
+            "BUCARAMANGA": 360,
+            "CARTAGENA": 310,
+            "PEREIRA": 301,
+            "MANIZALES": 174
+          },
+          "has_membership": {
+            "FALSE": 4674,
+            "TRUE": 1326
+          },
+          "tickets_total": {
+            "2": 1920,
+            "3": 1498,
+            "1": 619,
+            "4": 558,
+            "7": 267,
+            "8": 235,
+            "9": 216,
+            "5": 186,
+            "10": 162,
+            "6": 154,
+            "11": 101,
+            "12": 52,
+            "13": 15,
+            "0": 14,
+            "14": 2,
+            "15": 1
+          },
+          "tickets_used": {
+            "2": 1948,
+            "1": 1500,
+            "3": 1109,
+            "4": 470,
+            "0": 343,
+            "5": 273,
+            "6": 165,
+            "7": 102,
+            "8": 57,
+            "9": 24,
+            "10": 7,
+            "13": 1,
+            "11": 1
+          },
+          "friends_count": {
+            "4": 1281,
+            "3": 1169,
+            "5": 964,
+            "2": 924,
+            "6": 582,
+            "1": 386,
+            "7": 309,
+            "8": 131,
+            "0": 127,
+            "9": 72,
+            "10": 33,
+            "11": 13,
+            "12": 5,
+            "13": 3,
+            "14": 1
+          },
+          "model_tickets_total": {
+            "2": 1876,
+            "3": 1251,
+            "1": 950,
+            "4": 506,
+            "7": 266,
+            "6": 230,
+            "5": 219,
+            "9": 187,
+            "8": 185,
+            "0": 135,
+            "10": 107,
+            "11": 57,
+            "12": 23,
+            "13": 8
+          },
+          "model_tickets_used": {
+            "2": 1835,
+            "1": 1737,
+            "3": 959,
+            "0": 538,
+            "4": 456,
+            "5": 218,
+            "6": 124,
+            "7": 82,
+            "8": 34,
+            "9": 11,
+            "10": 4,
+            "13": 1,
+            "11": 1
+          },
+          "future_used_leak_count": {
+            "0": 5366,
+            "1": 603,
+            "2": 30,
+            "3": 1
+          },
+          "model_history_available": {
+            "TRUE": 5865,
+            "FALSE": 135
+          }
+        }
+      },
+      "changes": {
+        "rows_raw": 6000,
+        "rows_clean": 6000,
+        "exact_duplicates_removed": 0,
+        "duplicate_primary_keys_removed": 0,
+        "rows_quarantined": 0,
+        "rows_dropped_insufficient_identity": 0,
+        "blanks_raw": 5031,
+        "blanks_clean": 0,
+        "transformations": {
+          "names_uppercased": 12000,
+          "email_uppercase": 0,
+          "email_plus_alias": 0,
+          "email_domain_typo": 0,
+          "email_invalid": 0,
+          "phone_formatted": 0,
+          "phone_missing": 0,
+          "phone_invalid": 0
+        },
+        "notes": []
+      }
+    },
+    "boom_tickets": {
+      "raw_profile": {
+        "rows": 22325,
+        "columns": [
+          "boom_ticket_id",
+          "boom_user_id",
+          "event_id",
+          "type",
+          "source",
+          "created_at",
+          "used",
+          "date_used"
+        ],
+        "column_count": 8,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "boom_ticket_id": 0,
+          "boom_user_id": 0,
+          "event_id": 0,
+          "type": 0,
+          "source": 0,
+          "created_at": 0,
+          "used": 0,
+          "date_used": 7887
+        },
+        "blank_cells": 7887,
+        "unique_by_column": {
+          "boom_ticket_id": 22325,
+          "boom_user_id": 5986,
+          "event_id": 60,
+          "type": 2,
+          "source": 4,
+          "created_at": 438,
+          "used": 2,
+          "date_used": 10552
+        },
+        "numeric": {},
+        "categories": {
+          "type": {
+            "consumo_minimo": 14266,
+            "membresia": 8059
+          },
+          "source": {
+            "app": 8921,
+            "box_office": 4493,
+            "referral": 4471,
+            "web": 4440
+          },
+          "used": {
+            "true": 14438,
+            "false": 7887
+          }
+        }
+      },
+      "clean_profile": {
+        "rows": 22325,
+        "columns": [
+          "boom_ticket_id",
+          "boom_user_id",
+          "event_id",
+          "type",
+          "source",
+          "created_at",
+          "used",
+          "date_used",
+          "future_used_leak",
+          "eligible_for_training"
+        ],
+        "column_count": 10,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "boom_ticket_id": 0,
+          "boom_user_id": 0,
+          "event_id": 0,
+          "type": 0,
+          "source": 0,
+          "created_at": 0,
+          "used": 0,
+          "date_used": 0,
+          "future_used_leak": 0,
+          "eligible_for_training": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "boom_ticket_id": 22325,
+          "boom_user_id": 5986,
+          "event_id": 60,
+          "type": 2,
+          "source": 4,
+          "created_at": 438,
+          "used": 2,
+          "date_used": 10552,
+          "future_used_leak": 2,
+          "eligible_for_training": 2
+        },
+        "numeric": {},
+        "categories": {
+          "type": {
+            "CONSUMO_MINIMO": 14266,
+            "MEMBRESIA": 8059
+          },
+          "source": {
+            "APP": 8921,
+            "BOX_OFFICE": 4493,
+            "REFERRAL": 4471,
+            "WEB": 4440
+          },
+          "used": {
+            "TRUE": 14438,
+            "FALSE": 7887
+          },
+          "future_used_leak": {
+            "FALSE": 21659,
+            "TRUE": 666
+          },
+          "eligible_for_training": {
+            "TRUE": 20056,
+            "FALSE": 2269
+          }
+        }
+      },
+      "changes": {
+        "rows_raw": 22325,
+        "rows_clean": 22325,
+        "exact_duplicates_removed": 0,
+        "duplicate_primary_keys_removed": 0,
+        "rows_quarantined": 0,
+        "rows_dropped_insufficient_identity": 0,
+        "blanks_raw": 7887,
+        "blanks_clean": 0,
+        "transformations": {
+          "future_used_leak_flagged": 666,
+          "mature_training_rows": 20056
+        },
+        "notes": []
+      }
+    },
+    "boom_social": {
+      "raw_profile": {
+        "rows": 6000,
+        "columns": [
+          "boom_user_id",
+          "friends_count"
+        ],
+        "column_count": 2,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "boom_user_id": 0,
+          "friends_count": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "boom_user_id": 6000,
+          "friends_count": 15
+        },
+        "numeric": {
+          "friends_count": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 3.0,
+            "median": 4.0,
+            "q3": 5.0,
+            "max": 14,
+            "outliers_iqr": 127,
+            "iqr_low": 0.0,
+            "iqr_high": 8.0
+          }
+        },
+        "categories": {
+          "friends_count": {
+            "4": 1281,
+            "3": 1169,
+            "5": 964,
+            "2": 924,
+            "6": 582,
+            "1": 386,
+            "7": 309,
+            "8": 131,
+            "0": 127,
+            "9": 72,
+            "10": 33,
+            "11": 13,
+            "12": 5,
+            "13": 3,
+            "14": 1
+          }
+        }
+      },
+      "clean_profile": {
+        "rows": 6000,
+        "columns": [
+          "boom_user_id",
+          "friends_count"
+        ],
+        "column_count": 2,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "boom_user_id": 0,
+          "friends_count": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "boom_user_id": 6000,
+          "friends_count": 15
+        },
+        "numeric": {
+          "friends_count": {
+            "valid": 6000,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 3.0,
+            "median": 4.0,
+            "q3": 5.0,
+            "max": 14,
+            "outliers_iqr": 127,
+            "iqr_low": 0.0,
+            "iqr_high": 8.0
+          }
+        },
+        "categories": {
+          "friends_count": {
+            "4": 1281,
+            "3": 1169,
+            "5": 964,
+            "2": 924,
+            "6": 582,
+            "1": 386,
+            "7": 309,
+            "8": 131,
+            "0": 127,
+            "9": 72,
+            "10": 33,
+            "11": 13,
+            "12": 5,
+            "13": 3,
+            "14": 1
+          }
+        }
+      },
+      "changes": {
+        "rows_raw": 6000,
+        "rows_clean": 6000,
+        "exact_duplicates_removed": 0,
+        "duplicate_primary_keys_removed": 0,
+        "rows_quarantined": 0,
+        "rows_dropped_insufficient_identity": 0,
+        "blanks_raw": 0,
+        "blanks_clean": 0,
+        "transformations": {},
+        "notes": []
+      }
+    },
+    "ft_artists": {
+      "raw_profile": {
+        "rows": 14,
+        "columns": [
+          "artist_id",
+          "name",
+          "home_city",
+          "residency_venue",
+          "residency_weekday",
+          "has_residency",
+          "events_total",
+          "events_past",
+          "events_upcoming",
+          "tickets_sold",
+          "checked_in_count",
+          "attendance_rate_july"
+        ],
+        "column_count": 12,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "artist_id": 0,
+          "name": 0,
+          "home_city": 0,
+          "residency_venue": 9,
+          "residency_weekday": 9,
+          "has_residency": 0,
+          "events_total": 0,
+          "events_past": 0,
+          "events_upcoming": 0,
+          "tickets_sold": 1,
+          "checked_in_count": 3,
+          "attendance_rate_july": 3
+        },
+        "blank_cells": 25,
+        "unique_by_column": {
+          "artist_id": 14,
+          "name": 14,
+          "home_city": 8,
+          "residency_venue": 6,
+          "residency_weekday": 6,
+          "has_residency": 2,
+          "events_total": 7,
+          "events_past": 6,
+          "events_upcoming": 6,
+          "tickets_sold": 14,
+          "checked_in_count": 12,
+          "attendance_rate_july": 12
+        },
+        "numeric": {
+          "events_total": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 1.25,
+            "median": 3.5,
+            "q3": 8.75,
+            "max": 9,
+            "outliers_iqr": 0,
+            "iqr_low": -10.0,
+            "iqr_high": 20.0
+          },
+          "events_past": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 1.0,
+            "median": 1.5,
+            "q3": 4.0,
+            "max": 5,
+            "outliers_iqr": 0,
+            "iqr_low": -3.5,
+            "iqr_high": 8.5
+          },
+          "events_upcoming": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 1.0,
+            "median": 1.5,
+            "q3": 4.0,
+            "max": 5,
+            "outliers_iqr": 0,
+            "iqr_low": -3.5,
+            "iqr_high": 8.5
+          },
+          "tickets_sold": {
+            "valid": 13,
+            "missing_or_invalid": 1,
+            "min": 425.0,
+            "q1": 529.0,
+            "median": 943.0,
+            "q3": 1086.0,
+            "max": 1709.0,
+            "outliers_iqr": 0,
+            "iqr_low": -306.5,
+            "iqr_high": 1921.5
+          },
+          "checked_in_count": {
+            "valid": 11,
+            "missing_or_invalid": 3,
+            "min": 45.0,
+            "q1": 325.0,
+            "median": 462.0,
+            "q3": 572.0,
+            "max": 847.0,
+            "outliers_iqr": 0,
+            "iqr_low": -45.5,
+            "iqr_high": 942.5
+          },
+          "attendance_rate_july": {
+            "valid": 11,
+            "missing_or_invalid": 3,
+            "min": 0.3237,
+            "q1": 0.6718,
+            "median": 0.7682,
+            "q3": 0.8512,
+            "max": 0.9331,
+            "outliers_iqr": 1,
+            "iqr_low": 0.40269999999999995,
+            "iqr_high": 1.1202999999999999
+          }
+        },
+        "categories": {
+          "artist_id": {
+            "ft_art_006": 1,
+            "ft_art_007": 1,
+            "ft_art_002": 1,
+            "ft_art_014": 1,
+            "ft_art_004": 1,
+            "ft_art_013": 1,
+            "ft_art_012": 1,
+            "ft_art_009": 1,
+            "ft_art_010": 1,
+            "ft_art_005": 1,
+            "ft_art_001": 1,
+            "ft_art_011": 1,
+            "ft_art_003": 1,
+            "ft_art_008": 1
+          },
+          "name": {
+            "Sin Filtro": 1,
+            "Cuento Corto": 1,
+            "Micrófono Suelto": 1,
+            "Últimas Filas": 1,
+            "La Bodega Improvisa": 1,
+            "El Recreo": 1,
+            "Segunda Función": 1,
+            "Roast de Medianoche": 1,
+            "Tres Sillas": 1,
+            "Trasnoche Cali": 1,
+            "Mala Hora": 1,
+            "Comedia de Barrio": 1,
+            "Doble Sentido": 1,
+            "Los del Fondo": 1
+          },
+          "home_city": {
+            "Bogotá": 5,
+            "Medellín": 2,
+            "Cali": 2,
+            "Manizales": 1,
+            "Cartagena": 1,
+            "Pereira": 1,
+            "Barranquilla": 1,
+            "Bucaramanga": 1
+          },
+          "residency_venue": {
+            "<BLANK>": 9,
+            "Ace of Clubs": 1,
+            "La Bodega del Chiste": 1,
+            "Sala Beethoven": 1,
+            "Casa E": 1,
+            "La Pascasia": 1
+          },
+          "residency_weekday": {
+            "<BLANK>": 9,
+            "martes": 1,
+            "miércoles": 1,
+            "sábado": 1,
+            "viernes": 1,
+            "jueves": 1
+          },
+          "has_residency": {
+            "false": 9,
+            "true": 5
+          },
+          "events_total": {
+            "9": 4,
+            "1": 3,
+            "4": 2,
+            "2": 2,
+            "8": 1,
+            "0": 1,
+            "3": 1
+          },
+          "events_past": {
+            "1": 4,
+            "0": 3,
+            "5": 3,
+            "4": 2,
+            "3": 1,
+            "2": 1
+          },
+          "events_upcoming": {
+            "4": 4,
+            "1": 4,
+            "0": 3,
+            "3": 1,
+            "2": 1,
+            "5": 1
+          },
+          "tickets_sold": {
+            "1709": 1,
+            "483": 1,
+            "962": 1,
+            "<BLANK>": 1,
+            "1202": 1,
+            "604": 1,
+            "1692": 1,
+            "857": 1,
+            "427": 1,
+            "943": 1,
+            "1012": 1,
+            "529": 1,
+            "1086": 1,
+            "425": 1
+          },
+          "checked_in_count": {
+            "<BLANK>": 3,
+            "265": 1,
+            "296": 1,
+            "603": 1,
+            "416": 1,
+            "847": 1,
+            "537": 1,
+            "462": 1,
+            "592": 1,
+            "354": 1,
+            "552": 1,
+            "45": 1
+          },
+          "attendance_rate_july": {
+            "<BLANK>": 3,
+            "0.9331": 1,
+            "0.5008": 1,
+            "0.7682": 1,
+            "0.6887": 1,
+            "0.6744": 1,
+            "0.8592": 1,
+            "0.8571": 1,
+            "0.8257": 1,
+            "0.6692": 1,
+            "0.8453": 1,
+            "0.3237": 1
+          }
+        }
+      },
+      "clean_profile": {
+        "rows": 14,
+        "columns": [
+          "artist_id",
+          "name",
+          "home_city",
+          "residency_venue",
+          "residency_weekday",
+          "has_residency",
+          "events_total",
+          "events_past",
+          "events_upcoming",
+          "tickets_sold",
+          "checked_in_count",
+          "attendance_rate_july"
+        ],
+        "column_count": 12,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "artist_id": 0,
+          "name": 0,
+          "home_city": 0,
+          "residency_venue": 0,
+          "residency_weekday": 0,
+          "has_residency": 0,
+          "events_total": 0,
+          "events_past": 0,
+          "events_upcoming": 0,
+          "tickets_sold": 0,
+          "checked_in_count": 0,
+          "attendance_rate_july": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "artist_id": 14,
+          "name": 14,
+          "home_city": 8,
+          "residency_venue": 6,
+          "residency_weekday": 6,
+          "has_residency": 2,
+          "events_total": 7,
+          "events_past": 6,
+          "events_upcoming": 6,
+          "tickets_sold": 14,
+          "checked_in_count": 12,
+          "attendance_rate_july": 12
+        },
+        "numeric": {
+          "events_total": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 1.25,
+            "median": 3.5,
+            "q3": 8.75,
+            "max": 9,
+            "outliers_iqr": 0,
+            "iqr_low": -10.0,
+            "iqr_high": 20.0
+          },
+          "events_past": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 1.0,
+            "median": 1.5,
+            "q3": 4.0,
+            "max": 5,
+            "outliers_iqr": 0,
+            "iqr_low": -3.5,
+            "iqr_high": 8.5
+          },
+          "events_upcoming": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 1.0,
+            "median": 1.5,
+            "q3": 4.0,
+            "max": 5,
+            "outliers_iqr": 0,
+            "iqr_low": -3.5,
+            "iqr_high": 8.5
+          },
+          "tickets_sold": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 494.5,
+            "median": 900.0,
+            "q3": 1067.5,
+            "max": 1709,
+            "outliers_iqr": 0,
+            "iqr_low": -365.0,
+            "iqr_high": 1927.0
+          },
+          "checked_in_count": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 100.0,
+            "median": 385.0,
+            "q3": 548.25,
+            "max": 847,
+            "outliers_iqr": 0,
+            "iqr_low": -572.375,
+            "iqr_high": 1220.625
+          },
+          "attendance_rate_july": {
+            "valid": 14,
+            "missing_or_invalid": 0,
+            "min": 0.0,
+            "q1": 0.367975,
+            "median": 0.68155,
+            "q3": 0.8404,
+            "max": 0.9331,
+            "outliers_iqr": 0,
+            "iqr_low": -0.34066250000000003,
+            "iqr_high": 1.5490375
+          }
+        },
+        "categories": {
+          "artist_id": {
+            "ft_art_001": 1,
+            "ft_art_002": 1,
+            "ft_art_003": 1,
+            "ft_art_004": 1,
+            "ft_art_005": 1,
+            "ft_art_006": 1,
+            "ft_art_007": 1,
+            "ft_art_008": 1,
+            "ft_art_009": 1,
+            "ft_art_010": 1,
+            "ft_art_011": 1,
+            "ft_art_012": 1,
+            "ft_art_013": 1,
+            "ft_art_014": 1
+          },
+          "name": {
+            "MALA HORA": 1,
+            "MICRÓFONO SUELTO": 1,
+            "DOBLE SENTIDO": 1,
+            "LA BODEGA IMPROVISA": 1,
+            "TRASNOCHE CALI": 1,
+            "SIN FILTRO": 1,
+            "CUENTO CORTO": 1,
+            "LOS DEL FONDO": 1,
+            "ROAST DE MEDIANOCHE": 1,
+            "TRES SILLAS": 1,
+            "COMEDIA DE BARRIO": 1,
+            "SEGUNDA FUNCIÓN": 1,
+            "EL RECREO": 1,
+            "ÚLTIMAS FILAS": 1
+          },
+          "home_city": {
+            "BOGOTÁ": 5,
+            "MEDELLÍN": 2,
+            "CALI": 2,
+            "BARRANQUILLA": 1,
+            "BUCARAMANGA": 1,
+            "PEREIRA": 1,
+            "CARTAGENA": 1,
+            "MANIZALES": 1
+          },
+          "residency_venue": {
+            "NO_APLICA": 9,
+            "CASA E": 1,
+            "ACE OF CLUBS": 1,
+            "LA PASCASIA": 1,
+            "LA BODEGA DEL CHISTE": 1,
+            "SALA BEETHOVEN": 1
+          },
+          "residency_weekday": {
+            "NO_APLICA": 9,
+            "VIERNES": 1,
+            "MARTES": 1,
+            "JUEVES": 1,
+            "MIÉRCOLES": 1,
+            "SÁBADO": 1
+          },
+          "has_residency": {
+            "FALSE": 9,
+            "TRUE": 5
+          },
+          "events_total": {
+            "9": 4,
+            "1": 3,
+            "4": 2,
+            "2": 2,
+            "8": 1,
+            "3": 1,
+            "0": 1
+          },
+          "events_past": {
+            "1": 4,
+            "5": 3,
+            "0": 3,
+            "4": 2,
+            "2": 1,
+            "3": 1
+          },
+          "events_upcoming": {
+            "4": 4,
+            "1": 4,
+            "0": 3,
+            "5": 1,
+            "3": 1,
+            "2": 1
+          },
+          "tickets_sold": {
+            "1012": 1,
+            "962": 1,
+            "1086": 1,
+            "1202": 1,
+            "943": 1,
+            "1709": 1,
+            "483": 1,
+            "425": 1,
+            "857": 1,
+            "427": 1,
+            "529": 1,
+            "1692": 1,
+            "604": 1,
+            "0": 1
+          },
+          "checked_in_count": {
+            "0": 3,
+            "592": 1,
+            "296": 1,
+            "552": 1,
+            "603": 1,
+            "462": 1,
+            "265": 1,
+            "45": 1,
+            "537": 1,
+            "354": 1,
+            "847": 1,
+            "416": 1
+          },
+          "attendance_rate_july": {
+            "0.0": 3,
+            "0.8257": 1,
+            "0.5008": 1,
+            "0.8453": 1,
+            "0.7682": 1,
+            "0.8571": 1,
+            "0.9331": 1,
+            "0.3237": 1,
+            "0.8592": 1,
+            "0.6692": 1,
+            "0.6744": 1,
+            "0.6887": 1
+          }
+        }
+      },
+      "changes": {
+        "rows_raw": 14,
+        "rows_clean": 14,
+        "exact_duplicates_removed": 0,
+        "duplicate_primary_keys_removed": 0,
+        "rows_quarantined": 0,
+        "rows_dropped_insufficient_identity": 0,
+        "blanks_raw": 25,
+        "blanks_clean": 0,
+        "transformations": {},
+        "notes": []
+      }
+    },
+    "ft_events": {
+      "raw_profile": {
+        "rows": 62,
+        "columns": [
+          "event_id",
+          "title",
+          "artist_id",
+          "artist_name",
+          "residency_venue",
+          "residency_weekday",
+          "city",
+          "venue",
+          "capacity",
+          "starts_at",
+          "weekday",
+          "is_residency",
+          "is_paid",
+          "is_upcoming",
+          "month",
+          "tickets_sold",
+          "checked_in_count",
+          "attendance_rate",
+          "fill_rate",
+          "gross_revenue"
+        ],
+        "column_count": 20,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "event_id": 0,
+          "title": 0,
+          "artist_id": 0,
+          "artist_name": 0,
+          "residency_venue": 18,
+          "residency_weekday": 18,
+          "city": 0,
+          "venue": 0,
+          "capacity": 0,
+          "starts_at": 0,
+          "weekday": 0,
+          "is_residency": 0,
+          "is_paid": 0,
+          "is_upcoming": 0,
+          "month": 0,
+          "tickets_sold": 0,
+          "checked_in_count": 30,
+          "attendance_rate": 30,
+          "fill_rate": 0,
+          "gross_revenue": 0
+        },
+        "blank_cells": 96,
+        "unique_by_column": {
+          "event_id": 62,
+          "title": 22,
+          "artist_id": 13,
+          "artist_name": 13,
+          "residency_venue": 6,
+          "residency_weekday": 6,
+          "city": 5,
+          "venue": 11,
+          "capacity": 10,
+          "starts_at": 58,
+          "weekday": 7,
+          "is_residency": 2,
+          "is_paid": 2,
+          "is_upcoming": 2,
+          "month": 2,
+          "tickets_sold": 57,
+          "checked_in_count": 29,
+          "attendance_rate": 33,
+          "fill_rate": 56,
+          "gross_revenue": 51
+        },
+        "numeric": {
+          "capacity": {
+            "valid": 62,
+            "missing_or_invalid": 0,
+            "min": 120,
+            "q1": 150.0,
+            "median": 220.0,
+            "q3": 302.5,
+            "max": 1200,
+            "outliers_iqr": 9,
+            "iqr_low": -78.75,
+            "iqr_high": 531.25
+          },
+          "tickets_sold": {
+            "valid": 62,
+            "missing_or_invalid": 0,
+            "min": 37,
+            "q1": 95.0,
+            "median": 138.5,
+            "q3": 230.0,
+            "max": 637,
+            "outliers_iqr": 5,
+            "iqr_low": -107.5,
+            "iqr_high": 432.5
+          },
+          "checked_in_count": {
+            "valid": 32,
+            "missing_or_invalid": 30,
+            "min": 34.0,
+            "q1": 89.75,
+            "median": 132.5,
+            "q3": 171.0,
+            "max": 435.0,
+            "outliers_iqr": 4,
+            "iqr_low": -32.125,
+            "iqr_high": 292.875
+          },
+          "attendance_rate": {
+            "valid": 32,
+            "missing_or_invalid": 30,
+            "min": 0.2681,
+            "q1": 0.6794749999999999,
+            "median": 0.8005500000000001,
+            "q3": 0.86685,
+            "max": 0.9467,
+            "outliers_iqr": 3,
+            "iqr_low": 0.39841249999999984,
+            "iqr_high": 1.1479125000000001
+          },
+          "fill_rate": {
+            "valid": 62,
+            "missing_or_invalid": 0,
+            "min": 0.2545,
+            "q1": 0.49375,
+            "median": 0.6917,
+            "q3": 0.82165,
+            "max": 1.0,
+            "outliers_iqr": 0,
+            "iqr_low": 0.0019000000000000683,
+            "iqr_high": 1.3135
+          },
+          "gross_revenue": {
+            "valid": 62,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 2958750.0,
+            "median": 6233500.0,
+            "q3": 10635250.0,
+            "max": 31089000,
+            "outliers_iqr": 7,
+            "iqr_low": -8556000.0,
+            "iqr_high": 22150000.0
+          }
+        },
+        "categories": {
+          "artist_id": {
+            "ft_art_004": 9,
+            "ft_art_003": 9,
+            "ft_art_001": 9,
+            "ft_art_005": 9,
+            "ft_art_002": 8,
+            "ft_art_012": 4,
+            "ft_art_006": 4,
+            "ft_art_009": 3,
+            "ft_art_008": 2,
+            "ft_art_007": 2,
+            "ft_art_013": 1,
+            "ft_art_011": 1,
+            "ft_art_010": 1
+          },
+          "artist_name": {
+            "La Bodega Improvisa": 9,
+            "Doble Sentido": 9,
+            "Mala Hora": 9,
+            "Trasnoche Cali": 9,
+            "Micrófono Suelto": 8,
+            "Segunda Función": 4,
+            "Sin Filtro": 4,
+            "Roast de Medianoche": 3,
+            "Los del Fondo": 2,
+            "Cuento Corto": 2,
+            "El Recreo": 1,
+            "Comedia de Barrio": 1,
+            "Tres Sillas": 1
+          },
+          "residency_venue": {
+            "<BLANK>": 18,
+            "La Bodega del Chiste": 9,
+            "La Pascasia": 9,
+            "Casa E": 9,
+            "Sala Beethoven": 9,
+            "Ace of Clubs": 8
+          },
+          "residency_weekday": {
+            "<BLANK>": 18,
+            "miércoles": 9,
+            "jueves": 9,
+            "viernes": 9,
+            "sábado": 9,
+            "martes": 8
+          },
+          "city": {
+            "Bogotá": 36,
+            "Medellín": 11,
+            "Cali": 10,
+            "Pereira": 4,
+            "Cartagena": 1
+          },
+          "venue": {
+            "La Bodega del Chiste": 11,
+            "Ace of Clubs": 10,
+            "Casa E": 10,
+            "La Pascasia": 9,
+            "Sala Beethoven": 9,
+            "Teatro Santiago Londoño": 4,
+            "Teatro Colsubsidio": 4,
+            "Teatro Metropolitano": 2,
+            "Teatro Adolfo Mejía": 1,
+            "Teatro Nacional Fanny Mikey": 1,
+            "Teatro Jorge Isaacs": 1
+          },
+          "capacity": {
+            "150": 12,
+            "220": 10,
+            "120": 9,
+            "250": 8,
+            "800": 7,
+            "180": 7,
+            "450": 4,
+            "320": 3,
+            "600": 1,
+            "1200": 1
+          },
+          "weekday": {
+            "jueves": 14,
+            "sábado": 14,
+            "miércoles": 12,
+            "viernes": 11,
+            "martes": 9,
+            "lunes": 1,
+            "domingo": 1
+          },
+          "is_residency": {
+            "true": 44,
+            "false": 18
+          },
+          "is_paid": {
+            "true": 50,
+            "false": 12
+          },
+          "is_upcoming": {
+            "false": 32,
+            "true": 30
+          },
+          "month": {
+            "julio": 32,
+            "agosto": 30
+          }
+        }
+      },
+      "clean_profile": {
+        "rows": 62,
+        "columns": [
+          "event_id",
+          "title",
+          "artist_id",
+          "artist_name",
+          "residency_venue",
+          "residency_weekday",
+          "city",
+          "venue",
+          "capacity",
+          "starts_at",
+          "weekday",
+          "is_residency",
+          "is_paid",
+          "is_upcoming",
+          "month",
+          "tickets_sold",
+          "checked_in_count",
+          "attendance_rate",
+          "fill_rate",
+          "gross_revenue"
+        ],
+        "column_count": 20,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "event_id": 0,
+          "title": 0,
+          "artist_id": 0,
+          "artist_name": 0,
+          "residency_venue": 0,
+          "residency_weekday": 0,
+          "city": 0,
+          "venue": 0,
+          "capacity": 0,
+          "starts_at": 0,
+          "weekday": 0,
+          "is_residency": 0,
+          "is_paid": 0,
+          "is_upcoming": 0,
+          "month": 0,
+          "tickets_sold": 0,
+          "checked_in_count": 0,
+          "attendance_rate": 0,
+          "fill_rate": 0,
+          "gross_revenue": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "event_id": 62,
+          "title": 22,
+          "artist_id": 13,
+          "artist_name": 13,
+          "residency_venue": 6,
+          "residency_weekday": 6,
+          "city": 5,
+          "venue": 11,
+          "capacity": 10,
+          "starts_at": 58,
+          "weekday": 7,
+          "is_residency": 2,
+          "is_paid": 2,
+          "is_upcoming": 2,
+          "month": 2,
+          "tickets_sold": 57,
+          "checked_in_count": 29,
+          "attendance_rate": 33,
+          "fill_rate": 56,
+          "gross_revenue": 51
+        },
+        "numeric": {
+          "capacity": {
+            "valid": 62,
+            "missing_or_invalid": 0,
+            "min": 120,
+            "q1": 150.0,
+            "median": 220.0,
+            "q3": 302.5,
+            "max": 1200,
+            "outliers_iqr": 9,
+            "iqr_low": -78.75,
+            "iqr_high": 531.25
+          },
+          "tickets_sold": {
+            "valid": 62,
+            "missing_or_invalid": 0,
+            "min": 37,
+            "q1": 95.0,
+            "median": 138.5,
+            "q3": 230.0,
+            "max": 637,
+            "outliers_iqr": 5,
+            "iqr_low": -107.5,
+            "iqr_high": 432.5
+          },
+          "checked_in_count": {
+            "valid": 32,
+            "missing_or_invalid": 30,
+            "min": 34.0,
+            "q1": 89.75,
+            "median": 132.5,
+            "q3": 171.0,
+            "max": 435.0,
+            "outliers_iqr": 4,
+            "iqr_low": -32.125,
+            "iqr_high": 292.875
+          },
+          "attendance_rate": {
+            "valid": 32,
+            "missing_or_invalid": 30,
+            "min": 0.2681,
+            "q1": 0.6794749999999999,
+            "median": 0.8005500000000001,
+            "q3": 0.86685,
+            "max": 0.9467,
+            "outliers_iqr": 3,
+            "iqr_low": 0.39841249999999984,
+            "iqr_high": 1.1479125000000001
+          },
+          "fill_rate": {
+            "valid": 62,
+            "missing_or_invalid": 0,
+            "min": 0.2545,
+            "q1": 0.49375,
+            "median": 0.6917,
+            "q3": 0.82165,
+            "max": 1.0,
+            "outliers_iqr": 0,
+            "iqr_low": 0.0019000000000000683,
+            "iqr_high": 1.3135
+          },
+          "gross_revenue": {
+            "valid": 62,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 2958750.0,
+            "median": 6233500.0,
+            "q3": 10635250.0,
+            "max": 31089000,
+            "outliers_iqr": 7,
+            "iqr_low": -8556000.0,
+            "iqr_high": 22150000.0
+          }
+        },
+        "categories": {
+          "artist_id": {
+            "ft_art_001": 9,
+            "ft_art_003": 9,
+            "ft_art_004": 9,
+            "ft_art_005": 9,
+            "ft_art_002": 8,
+            "ft_art_006": 4,
+            "ft_art_012": 4,
+            "ft_art_009": 3,
+            "ft_art_007": 2,
+            "ft_art_008": 2,
+            "ft_art_011": 1,
+            "ft_art_010": 1,
+            "ft_art_013": 1
+          },
+          "artist_name": {
+            "MALA HORA": 9,
+            "DOBLE SENTIDO": 9,
+            "LA BODEGA IMPROVISA": 9,
+            "TRASNOCHE CALI": 9,
+            "MICRÓFONO SUELTO": 8,
+            "SIN FILTRO": 4,
+            "SEGUNDA FUNCIÓN": 4,
+            "ROAST DE MEDIANOCHE": 3,
+            "CUENTO CORTO": 2,
+            "LOS DEL FONDO": 2,
+            "COMEDIA DE BARRIO": 1,
+            "TRES SILLAS": 1,
+            "EL RECREO": 1
+          },
+          "residency_venue": {
+            "NO_APLICA": 18,
+            "CASA E": 9,
+            "LA PASCASIA": 9,
+            "LA BODEGA DEL CHISTE": 9,
+            "SALA BEETHOVEN": 9,
+            "ACE OF CLUBS": 8
+          },
+          "residency_weekday": {
+            "NO_APLICA": 18,
+            "VIERNES": 9,
+            "JUEVES": 9,
+            "MIÉRCOLES": 9,
+            "SÁBADO": 9,
+            "MARTES": 8
+          },
+          "city": {
+            "BOGOTÁ": 36,
+            "MEDELLÍN": 11,
+            "CALI": 10,
+            "PEREIRA": 4,
+            "CARTAGENA": 1
+          },
+          "venue": {
+            "LA BODEGA DEL CHISTE": 11,
+            "CASA E": 10,
+            "ACE OF CLUBS": 10,
+            "LA PASCASIA": 9,
+            "SALA BEETHOVEN": 9,
+            "TEATRO SANTIAGO LONDOÑO": 4,
+            "TEATRO COLSUBSIDIO": 4,
+            "TEATRO METROPOLITANO": 2,
+            "TEATRO NACIONAL FANNY MIKEY": 1,
+            "TEATRO ADOLFO MEJÍA": 1,
+            "TEATRO JORGE ISAACS": 1
+          },
+          "capacity": {
+            "150": 12,
+            "220": 10,
+            "120": 9,
+            "250": 8,
+            "180": 7,
+            "800": 7,
+            "450": 4,
+            "320": 3,
+            "1200": 1,
+            "600": 1
+          },
+          "weekday": {
+            "JUEVES": 14,
+            "SÁBADO": 14,
+            "MIÉRCOLES": 12,
+            "VIERNES": 11,
+            "MARTES": 9,
+            "DOMINGO": 1,
+            "LUNES": 1
+          },
+          "is_residency": {
+            "TRUE": 44,
+            "FALSE": 18
+          },
+          "is_paid": {
+            "TRUE": 50,
+            "FALSE": 12
+          },
+          "is_upcoming": {
+            "FALSE": 32,
+            "TRUE": 30
+          },
+          "month": {
+            "JULIO": 32,
+            "AGOSTO": 30
+          }
+        }
+      },
+      "changes": {
+        "rows_raw": 62,
+        "rows_clean": 62,
+        "exact_duplicates_removed": 0,
+        "duplicate_primary_keys_removed": 0,
+        "rows_quarantined": 0,
+        "rows_dropped_insufficient_identity": 0,
+        "blanks_raw": 96,
+        "blanks_clean": 0,
+        "transformations": {},
+        "notes": []
+      }
+    },
+    "ft_sales": {
+      "raw_profile": {
+        "rows": 6383,
+        "columns": [
+          "sale_id",
+          "event_id",
+          "buyer_name",
+          "buyer_email",
+          "buyer_phone",
+          "qty",
+          "subtotal",
+          "channel",
+          "purchased_at"
+        ],
+        "column_count": 9,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "sale_id": 0,
+          "event_id": 0,
+          "buyer_name": 0,
+          "buyer_email": 0,
+          "buyer_phone": 591,
+          "qty": 0,
+          "subtotal": 0,
+          "channel": 0,
+          "purchased_at": 0
+        },
+        "blank_cells": 591,
+        "unique_by_column": {
+          "sale_id": 6383,
+          "event_id": 62,
+          "buyer_name": 3393,
+          "buyer_email": 5836,
+          "buyer_phone": 5577,
+          "qty": 6,
+          "subtotal": 274,
+          "channel": 4,
+          "purchased_at": 1805
+        },
+        "numeric": {
+          "qty": {
+            "valid": 6383,
+            "missing_or_invalid": 0,
+            "min": 1,
+            "q1": 1.0,
+            "median": 2.0,
+            "q3": 2.0,
+            "max": 6,
+            "outliers_iqr": 588,
+            "iqr_low": -0.5,
+            "iqr_high": 3.5
+          },
+          "subtotal": {
+            "valid": 6383,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 0.0,
+            "median": 48000.0,
+            "q3": 120000.0,
+            "max": 930000,
+            "outliers_iqr": 215,
+            "iqr_low": -180000.0,
+            "iqr_high": 300000.0
+          }
+        },
+        "categories": {
+          "qty": {
+            "1": 2992,
+            "2": 2161,
+            "3": 642,
+            "4": 418,
+            "6": 169,
+            "5": 1
+          },
+          "channel": {
+            "WEB": 4941,
+            "BOX_OFFICE": 864,
+            "ADMIN": 376,
+            "RRPP": 202
+          }
+        }
+      },
+      "clean_profile": {
+        "rows": 6383,
+        "columns": [
+          "sale_id",
+          "event_id",
+          "buyer_name",
+          "buyer_email",
+          "buyer_phone",
+          "qty",
+          "subtotal",
+          "channel",
+          "purchased_at",
+          "buyer_name_match_key",
+          "buyer_name_tokens_key",
+          "buyer_email_match_key",
+          "buyer_email_valid",
+          "buyer_phone_match_key",
+          "buyer_phone_valid",
+          "identity_fields_available"
+        ],
+        "column_count": 16,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "sale_id": 0,
+          "event_id": 0,
+          "buyer_name": 0,
+          "buyer_email": 0,
+          "buyer_phone": 0,
+          "qty": 0,
+          "subtotal": 0,
+          "channel": 0,
+          "purchased_at": 0,
+          "buyer_name_match_key": 0,
+          "buyer_name_tokens_key": 0,
+          "buyer_email_match_key": 0,
+          "buyer_email_valid": 0,
+          "buyer_phone_match_key": 0,
+          "buyer_phone_valid": 0,
+          "identity_fields_available": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "sale_id": 6383,
+          "event_id": 62,
+          "buyer_name": 2649,
+          "buyer_email": 5414,
+          "buyer_phone": 4957,
+          "qty": 6,
+          "subtotal": 274,
+          "channel": 4,
+          "purchased_at": 1805,
+          "buyer_name_match_key": 2336,
+          "buyer_name_tokens_key": 1902,
+          "buyer_email_match_key": 5414,
+          "buyer_email_valid": 1,
+          "buyer_phone_match_key": 4957,
+          "buyer_phone_valid": 2,
+          "identity_fields_available": 2
+        },
+        "numeric": {
+          "qty": {
+            "valid": 6383,
+            "missing_or_invalid": 0,
+            "min": 1,
+            "q1": 1.0,
+            "median": 2.0,
+            "q3": 2.0,
+            "max": 6,
+            "outliers_iqr": 588,
+            "iqr_low": -0.5,
+            "iqr_high": 3.5
+          },
+          "subtotal": {
+            "valid": 6383,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 0.0,
+            "median": 48000.0,
+            "q3": 120000.0,
+            "max": 930000,
+            "outliers_iqr": 215,
+            "iqr_low": -180000.0,
+            "iqr_high": 300000.0
+          }
+        },
+        "categories": {
+          "qty": {
+            "1": 2992,
+            "2": 2161,
+            "3": 642,
+            "4": 418,
+            "6": 169,
+            "5": 1
+          },
+          "channel": {
+            "WEB": 4941,
+            "BOX_OFFICE": 864,
+            "ADMIN": 376,
+            "RRPP": 202
+          },
+          "buyer_phone_valid": {
+            "TRUE": 5792,
+            "FALSE": 591
+          },
+          "identity_fields_available": {
+            "3": 5792,
+            "2": 591
+          }
+        }
+      },
+      "changes": {
+        "rows_raw": 6383,
+        "rows_clean": 6383,
+        "exact_duplicates_removed": 0,
+        "duplicate_primary_keys_removed": 0,
+        "rows_quarantined": 0,
+        "rows_dropped_insufficient_identity": 0,
+        "blanks_raw": 591,
+        "blanks_clean": 0,
+        "transformations": {
+          "names_uppercased": 6010,
+          "email_uppercase": 288,
+          "email_plus_alias": 380,
+          "email_domain_typo": 338,
+          "email_invalid": 0,
+          "phone_formatted": 4589,
+          "phone_missing": 591,
+          "phone_invalid": 0
+        },
+        "notes": []
+      }
+    },
+    "ft_tickets": {
+      "raw_profile": {
+        "rows": 11931,
+        "columns": [
+          "ticket_id",
+          "sale_id",
+          "event_id",
+          "ticket_type",
+          "price",
+          "checked_in",
+          "checked_in_at"
+        ],
+        "column_count": 7,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "ticket_id": 0,
+          "sale_id": 0,
+          "event_id": 0,
+          "ticket_type": 0,
+          "price": 0,
+          "checked_in": 5209,
+          "checked_in_at": 6962
+        },
+        "blank_cells": 12171,
+        "unique_by_column": {
+          "ticket_id": 11931,
+          "sale_id": 6383,
+          "event_id": 62,
+          "ticket_type": 4,
+          "price": 96,
+          "checked_in": 3,
+          "checked_in_at": 1714
+        },
+        "numeric": {
+          "price": {
+            "valid": 11931,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 0.0,
+            "median": 44000.0,
+            "q3": 62000.0,
+            "max": 159000,
+            "outliers_iqr": 13,
+            "iqr_low": -93000.0,
+            "iqr_high": 155000.0
+          }
+        },
+        "categories": {
+          "ticket_type": {
+            "Cortesía": 4897,
+            "General": 4584,
+            "Preferencial": 1486,
+            "VIP": 964
+          },
+          "checked_in": {
+            "<BLANK>": 5209,
+            "true": 4969,
+            "false": 1753
+          }
+        }
+      },
+      "clean_profile": {
+        "rows": 11931,
+        "columns": [
+          "ticket_id",
+          "sale_id",
+          "event_id",
+          "ticket_type",
+          "price",
+          "checked_in",
+          "checked_in_at"
+        ],
+        "column_count": 7,
+        "exact_duplicate_rows": 0,
+        "duplicate_primary_key_rows": 0,
+        "missing_by_column": {
+          "ticket_id": 0,
+          "sale_id": 0,
+          "event_id": 0,
+          "ticket_type": 0,
+          "price": 0,
+          "checked_in": 0,
+          "checked_in_at": 0
+        },
+        "blank_cells": 0,
+        "unique_by_column": {
+          "ticket_id": 11931,
+          "sale_id": 6383,
+          "event_id": 62,
+          "ticket_type": 4,
+          "price": 96,
+          "checked_in": 3,
+          "checked_in_at": 1715
+        },
+        "numeric": {
+          "price": {
+            "valid": 11931,
+            "missing_or_invalid": 0,
+            "min": 0,
+            "q1": 0.0,
+            "median": 44000.0,
+            "q3": 62000.0,
+            "max": 159000,
+            "outliers_iqr": 13,
+            "iqr_low": -93000.0,
+            "iqr_high": 155000.0
+          }
+        },
+        "categories": {
+          "ticket_type": {
+            "CORTESÍA": 4897,
+            "GENERAL": 4584,
+            "PREFERENCIAL": 1486,
+            "VIP": 964
+          },
+          "checked_in": {
+            "NO_OBSERVADO": 5209,
+            "TRUE": 4969,
+            "FALSE": 1753
+          }
+        }
+      },
+      "changes": {
+        "rows_raw": 11931,
+        "rows_clean": 11931,
+        "exact_duplicates_removed": 0,
+        "duplicate_primary_keys_removed": 0,
+        "rows_quarantined": 0,
+        "rows_dropped_insufficient_identity": 0,
+        "blanks_raw": 12171,
+        "blanks_clean": 0,
+        "transformations": {},
+        "notes": []
+      }
+    }
+  },
+  "format_fixes": {
+    "names_uppercased": 30010,
+    "email_uppercase": 288,
+    "email_plus_alias": 380,
+    "email_domain_typo": 338,
+    "email_invalid": 0,
+    "phone_formatted": 4589,
+    "phone_missing": 591,
+    "phone_invalid": 0,
+    "future_used_leak_flagged": 666,
+    "mature_training_rows": 20056
+  },
+  "integrity": {
+    "boom_profile.boom_user_id": {
+      "invalid_references": 0,
+      "rule": "ORPHAN_USER"
+    },
+    "boom_social.boom_user_id": {
+      "invalid_references": 0,
+      "rule": "ORPHAN_USER"
+    },
+    "boom_tickets.boom_user_id": {
+      "invalid_references": 0,
+      "rule": "ORPHAN_USER"
+    },
+    "ft_events.artist_id": {
+      "invalid_references": 0,
+      "rule": "ORPHAN_ARTIST"
+    },
+    "ft_sales.event_id": {
+      "invalid_references": 0,
+      "rule": "ORPHAN_EVENT"
+    },
+    "ft_tickets.event_id": {
+      "invalid_references": 0,
+      "rule": "ORPHAN_EVENT"
+    },
+    "ft_tickets.sale_id": {
+      "invalid_references": 0,
+      "rule": "ORPHAN_SALE"
+    },
+    "ft_tickets.sale_event_consistency": {
+      "mismatches": 0
+    },
+    "ft_sales.ticket_reconciliation": {
+      "qty_mismatches_corrected": 0,
+      "subtotal_mismatches_corrected": 0
+    },
+    "ft_events.summary_reconciliation": {}
+  },
+  "future_leak": {
+    "rows": 666,
+    "users": 634,
+    "min_date_used": "2026-08-01T11:17:00+00:00",
+    "max_date_used": "2026-08-26T12:13:00+00:00",
+    "example_ticket_ids": [
+      "bm_tkt_0000005",
+      "bm_tkt_0000007",
+      "bm_tkt_0000010",
+      "bm_tkt_0000026",
+      "bm_tkt_0000076",
+      "bm_tkt_0000121",
+      "bm_tkt_0000134",
+      "bm_tkt_0000141",
+      "bm_tkt_0000148",
+      "bm_tkt_0000152"
+    ]
+  },
+  "model_ready_rows": {
+    "boom_users.csv": 6000,
+    "boom_social.csv": 6000,
+    "ft_artists.csv": 14,
+    "ft_sales.csv": 6383,
+    "boom_profile.csv": 6000,
+    "boom_tickets_history.csv": 20056,
+    "ft_events_train_july.csv": 32,
+    "ft_events_score_august.csv": 30,
+    "ft_tickets_train_july.csv": 6722,
+    "ft_tickets_score_august.csv": 5209
+  }
+}

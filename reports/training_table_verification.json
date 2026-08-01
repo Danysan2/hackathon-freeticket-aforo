@@ -1,0 +1,187 @@
+{
+  "status": "PASS",
+  "checks_total": 32,
+  "checks_passed": 32,
+  "failures": [],
+  "checks": [
+    {
+      "check": "filas de entrenamiento preservadas",
+      "passed": true,
+      "evidence": 6722
+    },
+    {
+      "check": "filas de scoring preservadas",
+      "passed": true,
+      "evidence": 5209
+    },
+    {
+      "check": "ticket_id train único",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "ticket_id score único",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "mismos tickets de julio",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "mismos tickets de agosto",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "objetivo solo en train",
+      "passed": true,
+      "evidence": [
+        true,
+        false
+      ]
+    },
+    {
+      "check": "objetivo binario completo",
+      "passed": true,
+      "evidence": {
+        "1": 4969,
+        "0": 1753
+      }
+    },
+    {
+      "check": "esquema train/score compatible",
+      "passed": true,
+      "evidence": 64
+    },
+    {
+      "check": "cero nulos",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "cero textos vacíos",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "columnas de fuga excluidas",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "check": "objetivo no figura como predictor",
+      "passed": true,
+      "evidence": "checked_in"
+    },
+    {
+      "check": "56 variables declaradas",
+      "passed": true,
+      "evidence": 56
+    },
+    {
+      "check": "variables declaradas existen",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "predictores numéricos válidos",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "probabilidades y pesos entre 0 y 1",
+      "passed": true,
+      "evidence": [
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "check": "tasas Boom entre 0 y 1",
+      "passed": true,
+      "evidence": [
+        0.025372,
+        0.989148
+      ]
+    },
+    {
+      "check": "membresía esperada entre 0 y 1",
+      "passed": true,
+      "evidence": [
+        0.006261,
+        0.971782
+      ]
+    },
+    {
+      "check": "cantidad de venta reconciliada",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "anticipación no negativa",
+      "passed": true,
+      "evidence": 0.0
+    },
+    {
+      "check": "cortesía + pagada = 1",
+      "passed": true,
+      "evidence": 0.0
+    },
+    {
+      "check": "mezcla de tipos suma 1",
+      "passed": true,
+      "evidence": 1.000000000139778e-06
+    },
+    {
+      "check": "aforo restante no negativo",
+      "passed": true,
+      "evidence": 0.0
+    },
+    {
+      "check": "peso de comprador atenuado por qty",
+      "passed": true,
+      "evidence": 5.000000000143778e-07
+    },
+    {
+      "check": "peso histórico atenuado por qty",
+      "passed": true,
+      "evidence": 5.000000000143778e-07
+    },
+    {
+      "check": "no resueltos conservan SIN_MATCH",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "resueltos tienen usuario Boom",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "julio solo en entrenamiento",
+      "passed": true,
+      "evidence": {
+        "JULIO": 6722
+      }
+    },
+    {
+      "check": "agosto solo en scoring",
+      "passed": true,
+      "evidence": {
+        "AGOSTO": 5209
+      }
+    },
+    {
+      "check": "conteo de tickets por evento train",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "check": "conteo de tickets por evento score",
+      "passed": true,
+      "evidence": 0
+    }
+  ]
+}

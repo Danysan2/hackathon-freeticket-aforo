@@ -1,0 +1,495 @@
+{
+  "winner": "catboost",
+  "selection_rule": "minimum event_mae; tie-break event_wape then ticket_brier",
+  "training_rows": 6722,
+  "training_events": 32,
+  "scoring_rows": 5209,
+  "scoring_events": 30,
+  "cross_validation": {
+    "method": "GroupKFold",
+    "n_splits": 5,
+    "fold_events": {
+      "1": [
+        "ft_evt_0013",
+        "ft_evt_0018",
+        "ft_evt_0028",
+        "ft_evt_0030",
+        "ft_evt_0047",
+        "ft_evt_0057",
+        "ft_evt_0059"
+      ],
+      "2": [
+        "ft_evt_0001",
+        "ft_evt_0005",
+        "ft_evt_0010",
+        "ft_evt_0021",
+        "ft_evt_0022",
+        "ft_evt_0029",
+        "ft_evt_0049"
+      ],
+      "3": [
+        "ft_evt_0002",
+        "ft_evt_0003",
+        "ft_evt_0004",
+        "ft_evt_0020",
+        "ft_evt_0045",
+        "ft_evt_0051"
+      ],
+      "4": [
+        "ft_evt_0031",
+        "ft_evt_0037",
+        "ft_evt_0038",
+        "ft_evt_0039",
+        "ft_evt_0053",
+        "ft_evt_0061"
+      ],
+      "5": [
+        "ft_evt_0011",
+        "ft_evt_0012",
+        "ft_evt_0019",
+        "ft_evt_0027",
+        "ft_evt_0036",
+        "ft_evt_0055"
+      ]
+    },
+    "catboost_best_iterations": [
+      208,
+      116,
+      216,
+      117,
+      175
+    ],
+    "fold_metrics": [
+      {
+        "fold": 1,
+        "model": "ticket_type_baseline",
+        "validation_events": 7,
+        "event_mae": 9.767901113637496,
+        "event_rmse": 11.29068877986364,
+        "event_wape": 0.05760346065329611,
+        "event_bias_pred_minus_actual": 0.3504471718621381,
+        "predicted_total": 1189.453130203035,
+        "actual_total": 1187.0,
+        "ticket_log_loss": 0.42628360987216213,
+        "ticket_brier": 0.1378383605818007,
+        "ticket_auc": 0.8198182670453174
+      },
+      {
+        "fold": 1,
+        "model": "logistic_regression",
+        "validation_events": 7,
+        "event_mae": 16.357195127954462,
+        "event_rmse": 26.865156345082937,
+        "event_wape": 0.09646197632323608,
+        "event_bias_pred_minus_actual": 6.062073868124081,
+        "predicted_total": 1229.4345170768686,
+        "actual_total": 1187.0,
+        "ticket_log_loss": 0.436872900853774,
+        "ticket_brier": 0.14064659804840618,
+        "ticket_auc": 0.8267850728333235
+      },
+      {
+        "fold": 1,
+        "model": "catboost",
+        "validation_events": 7,
+        "event_mae": 8.007804369193561,
+        "event_rmse": 9.017316441988283,
+        "event_wape": 0.04722378313761999,
+        "event_bias_pred_minus_actual": -1.2837795229362274,
+        "predicted_total": 1178.0135433394464,
+        "actual_total": 1187.0,
+        "ticket_log_loss": 0.4187363701450591,
+        "ticket_brier": 0.13432729908746918,
+        "ticket_auc": 0.8494944434690022
+      },
+      {
+        "fold": 1,
+        "model": "xgboost",
+        "validation_events": 7,
+        "event_mae": 9.344704006399427,
+        "event_rmse": 10.79713705793441,
+        "event_wape": 0.055107774258463346,
+        "event_bias_pred_minus_actual": -0.8570141621998378,
+        "predicted_total": 1181.0009008646011,
+        "actual_total": 1187.0,
+        "ticket_log_loss": 0.42289185430859944,
+        "ticket_brier": 0.13547617983220642,
+        "ticket_auc": 0.8408668800469072
+      },
+      {
+        "fold": 2,
+        "model": "ticket_type_baseline",
+        "validation_events": 7,
+        "event_mae": 4.186056537249576,
+        "event_rmse": 5.303506226196916,
+        "event_wape": 0.02774848083404075,
+        "event_bias_pred_minus_actual": -0.08252275496328057,
+        "predicted_total": 1055.422340715257,
+        "actual_total": 1056.0,
+        "ticket_log_loss": 0.3795746462826552,
+        "ticket_brier": 0.1181985015240806,
+        "ticket_auc": 0.8209509871441689
+      },
+      {
+        "fold": 2,
+        "model": "logistic_regression",
+        "validation_events": 7,
+        "event_mae": 7.324095894663417,
+        "event_rmse": 11.840997427337443,
+        "event_wape": 0.04854987808962492,
+        "event_bias_pred_minus_actual": 5.548350633745811,
+        "predicted_total": 1094.8384544362207,
+        "actual_total": 1056.0,
+        "ticket_log_loss": 0.37881151095096127,
+        "ticket_brier": 0.11794353894209234,
+        "ticket_auc": 0.8519441574839303
+      },
+      {
+        "fold": 2,
+        "model": "catboost",
+        "validation_events": 7,
+        "event_mae": 3.3579169281356047,
+        "event_rmse": 4.278366792252053,
+        "event_wape": 0.022258919031201925,
+        "event_bias_pred_minus_actual": 1.0254049588678527,
+        "predicted_total": 1063.177834712075,
+        "actual_total": 1056.0,
+        "ticket_log_loss": 0.3741958343973667,
+        "ticket_brier": 0.11661595634033753,
+        "ticket_auc": 0.8495638200183655
+      },
+      {
+        "fold": 2,
+        "model": "xgboost",
+        "validation_events": 7,
+        "event_mae": 4.228183435542243,
+        "event_rmse": 5.883208482975881,
+        "event_wape": 0.02802773110681411,
+        "event_bias_pred_minus_actual": 2.6085494671549116,
+        "predicted_total": 1074.2598462700844,
+        "actual_total": 1056.0,
+        "ticket_log_loss": 0.38363676635365285,
+        "ticket_brier": 0.1191566526046533,
+        "ticket_auc": 0.8346260904499541
+      },
+      {
+        "fold": 3,
+        "model": "ticket_type_baseline",
+        "validation_events": 6,
+        "event_mae": 13.297524204517101,
+        "event_rmse": 18.29992207282307,
+        "event_wape": 0.06637699270141648,
+        "event_bias_pred_minus_actual": -7.855482075444459,
+        "predicted_total": 1154.8671075473333,
+        "actual_total": 1202.0,
+        "ticket_log_loss": 0.38662088437930614,
+        "ticket_brier": 0.12291151473770906,
+        "ticket_auc": 0.8146051308083515
+      },
+      {
+        "fold": 3,
+        "model": "logistic_regression",
+        "validation_events": 6,
+        "event_mae": 6.886349383156464,
+        "event_rmse": 10.491173433776494,
+        "event_wape": 0.03437445615552311,
+        "event_bias_pred_minus_actual": -4.798126996761153,
+        "predicted_total": 1173.211238019433,
+        "actual_total": 1202.0,
+        "ticket_log_loss": 0.375458823636735,
+        "ticket_brier": 0.11799098190102257,
+        "ticket_auc": 0.8484153059401938
+      },
+      {
+        "fold": 3,
+        "model": "catboost",
+        "validation_events": 6,
+        "event_mae": 11.036953567741316,
+        "event_rmse": 16.35687087275194,
+        "event_wape": 0.05509294626160391,
+        "event_bias_pred_minus_actual": -5.734069492750621,
+        "predicted_total": 1167.5955830434964,
+        "actual_total": 1202.0,
+        "ticket_log_loss": 0.379027850923767,
+        "ticket_brier": 0.12022926805216637,
+        "ticket_auc": 0.8433930736907416
+      },
+      {
+        "fold": 3,
+        "model": "xgboost",
+        "validation_events": 6,
+        "event_mae": 13.250932092467943,
+        "event_rmse": 19.409832339989496,
+        "event_wape": 0.06614441976273516,
+        "event_bias_pred_minus_actual": -5.548187226057053,
+        "predicted_total": 1168.7108766436577,
+        "actual_total": 1202.0,
+        "ticket_log_loss": 0.3881103732489535,
+        "ticket_brier": 0.12335752027890141,
+        "ticket_auc": 0.8253746110531411
+      },
+      {
+        "fold": 4,
+        "model": "ticket_type_baseline",
+        "validation_events": 6,
+        "event_mae": 5.719033599805152,
+        "event_rmse": 7.135611773211834,
+        "event_wape": 0.047724897912143134,
+        "event_bias_pred_minus_actual": 1.4730173658461314,
+        "predicted_total": 727.8381041950768,
+        "actual_total": 719.0,
+        "ticket_log_loss": 0.3830691979454899,
+        "ticket_brier": 0.12106570982701148,
+        "ticket_auc": 0.8425528965869932
+      },
+      {
+        "fold": 4,
+        "model": "logistic_regression",
+        "validation_events": 6,
+        "event_mae": 6.690638413162201,
+        "event_rmse": 7.513854582058648,
+        "event_wape": 0.055832865756569136,
+        "event_bias_pred_minus_actual": 3.100754791478748,
+        "predicted_total": 737.6045287488724,
+        "actual_total": 719.0,
+        "ticket_log_loss": 0.3780912505146645,
+        "ticket_brier": 0.11899867683617309,
+        "ticket_auc": 0.8715928480277592
+      },
+      {
+        "fold": 4,
+        "model": "catboost",
+        "validation_events": 6,
+        "event_mae": 5.10315988045036,
+        "event_rmse": 6.3866797489420515,
+        "event_wape": 0.04258547883546893,
+        "event_bias_pred_minus_actual": 2.7720879803094243,
+        "predicted_total": 735.6325278818565,
+        "actual_total": 719.0,
+        "ticket_log_loss": 0.37975798406650635,
+        "ticket_brier": 0.1198689029135465,
+        "ticket_auc": 0.8683667178068051
+      },
+      {
+        "fold": 4,
+        "model": "xgboost",
+        "validation_events": 6,
+        "event_mae": 6.725673511624336,
+        "event_rmse": 8.868102564905922,
+        "event_wape": 0.05612523097322116,
+        "event_bias_pred_minus_actual": 5.331879650553067,
+        "predicted_total": 750.9912779033184,
+        "actual_total": 719.0,
+        "ticket_log_loss": 0.38278985291417883,
+        "ticket_brier": 0.12129535278396036,
+        "ticket_auc": 0.861417394338261
+      },
+      {
+        "fold": 5,
+        "model": "ticket_type_baseline",
+        "validation_events": 6,
+        "event_mae": 6.672924857409534,
+        "event_rmse": 8.942366617228828,
+        "event_wape": 0.049736085893735654,
+        "event_bias_pred_minus_actual": 3.9805999804670074,
+        "predicted_total": 828.8835998828022,
+        "actual_total": 805.0,
+        "ticket_log_loss": 0.34389442318728103,
+        "ticket_brier": 0.10370828605374754,
+        "ticket_auc": 0.8538911216660577
+      },
+      {
+        "fold": 5,
+        "model": "logistic_regression",
+        "validation_events": 6,
+        "event_mae": 8.272232882744932,
+        "event_rmse": 8.866263963353543,
+        "event_wape": 0.06165639415710509,
+        "event_bias_pred_minus_actual": -1.8774293903489572,
+        "predicted_total": 793.7354236579063,
+        "actual_total": 805.0,
+        "ticket_log_loss": 0.34809040451878115,
+        "ticket_brier": 0.10300502229254117,
+        "ticket_auc": 0.8706832298136645
+      },
+      {
+        "fold": 5,
+        "model": "catboost",
+        "validation_events": 6,
+        "event_mae": 3.8938263166936466,
+        "event_rmse": 5.23074943757656,
+        "event_wape": 0.029022307950511653,
+        "event_bias_pred_minus_actual": 3.269848231095024,
+        "predicted_total": 824.6190893865701,
+        "actual_total": 805.0,
+        "ticket_log_loss": 0.33756907196818037,
+        "ticket_brier": 0.10147343495193378,
+        "ticket_auc": 0.8721300694190719
+      },
+      {
+        "fold": 5,
+        "model": "xgboost",
+        "validation_events": 6,
+        "event_mae": 2.763770372917255,
+        "event_rmse": 3.3784387348923604,
+        "event_wape": 0.020599530729818048,
+        "event_bias_pred_minus_actual": 2.0525199783345065,
+        "predicted_total": 817.315119870007,
+        "actual_total": 805.0,
+        "ticket_log_loss": 0.3391364334336373,
+        "ticket_brier": 0.10130672726700993,
+        "ticket_auc": 0.8721008403361346
+      }
+    ]
+  },
+  "comparison": [
+    {
+      "rank": 1,
+      "model": "catboost",
+      "event_mae": 6.242615239706753,
+      "event_rmse": 9.205128976929096,
+      "event_wape": 0.040201989871325436,
+      "event_bias_pred_minus_actual": 0.0012055738576357555,
+      "predicted_total": 4969.038578363445,
+      "actual_total": 4969.0,
+      "ticket_log_loss": 0.38170495918679337,
+      "ticket_brier": 0.12005884721930717,
+      "ticket_auc": 0.8551326840214234
+    },
+    {
+      "rank": 2,
+      "model": "xgboost",
+      "event_mae": 7.232889623614028,
+      "event_rmse": 10.981695383733369,
+      "event_wape": 0.0465792851591163,
+      "event_bias_pred_minus_actual": 0.7274381734896451,
+      "predicted_total": 4992.278021551669,
+      "actual_total": 4969.0,
+      "ticket_log_loss": 0.38751379659211777,
+      "ticket_brier": 0.12178713579171728,
+      "ticket_auc": 0.8459234475654362
+    },
+    {
+      "rank": 3,
+      "model": "ticket_type_baseline",
+      "event_mae": 7.869206235206256,
+      "event_rmse": 11.016845005069632,
+      "event_wape": 0.05067711803715037,
+      "event_bias_pred_minus_actual": -0.3917411705154976,
+      "predicted_total": 4956.464282543504,
+      "actual_total": 4969.0,
+      "ticket_log_loss": 0.38798653782011605,
+      "ticket_brier": 0.12243144700704911,
+      "ticket_auc": 0.8212910920496581
+    },
+    {
+      "rank": 4,
+      "model": "logistic_regression",
+      "event_mae": 9.277011288522084,
+      "event_rmse": 15.313822517208832,
+      "event_wape": 0.05974328058617563,
+      "event_bias_pred_minus_actual": 1.8695050606031585,
+      "predicted_total": 5028.824161939301,
+      "actual_total": 4969.0,
+      "ticket_log_loss": 0.38785292115835535,
+      "ticket_brier": 0.12153278528847576,
+      "ticket_auc": 0.8516075193868844
+    }
+  ],
+  "winner_metrics": {
+    "rank": 1,
+    "model": "catboost",
+    "event_mae": 6.242615239706753,
+    "event_rmse": 9.205128976929096,
+    "event_wape": 0.040201989871325436,
+    "event_bias_pred_minus_actual": 0.0012055738576357555,
+    "predicted_total": 4969.038578363445,
+    "actual_total": 4969.0,
+    "ticket_log_loss": 0.38170495918679337,
+    "ticket_brier": 0.12005884721930717,
+    "ticket_auc": 0.8551326840214234
+  },
+  "paired_selection_stability": {
+    "runner_up": "xgboost",
+    "winner_better_events": 19,
+    "events_compared": 32,
+    "mean_mae_difference_winner_minus_runner": -0.9902743839072747,
+    "bootstrap_95_ci": [
+      -1.8913444587987696,
+      -0.10151424043194128
+    ]
+  },
+  "interval_method": {
+    "winner": "catboost",
+    "oof_event_residual_p10_centered": -9.858569813521934,
+    "oof_event_residual_p90_centered": 8.20922343903647,
+    "oof_event_residual_sd": 9.35242031277625
+  },
+  "top_features": [
+    {
+      "feature": "sale_unit_value",
+      "importance": 23.3310583674253
+    },
+    {
+      "feature": "sale_subtotal",
+      "importance": 14.85741350978945
+    },
+    {
+      "feature": "ticket_price_to_event_average",
+      "importance": 13.782197022861613
+    },
+    {
+      "feature": "ticket_is_courtesy",
+      "importance": 10.34914018367596
+    },
+    {
+      "feature": "ticket_price",
+      "importance": 9.813898605749413
+    },
+    {
+      "feature": "ticket_is_paid",
+      "importance": 9.574963916960337
+    },
+    {
+      "feature": "boom_tickets_used_expected",
+      "importance": 2.0712512417998763
+    },
+    {
+      "feature": "purchase_lead_hours",
+      "importance": 1.6837960677782622
+    },
+    {
+      "feature": "event_residency_weekday",
+      "importance": 1.5666482623123121
+    },
+    {
+      "feature": "purchase_lead_days",
+      "importance": 1.1798671048631517
+    },
+    {
+      "feature": "event_remaining_capacity",
+      "importance": 0.8621196081238445
+    },
+    {
+      "feature": "match_status",
+      "importance": 0.7066529609606214
+    },
+    {
+      "feature": "boom_friends_count_expected",
+      "importance": 0.7039772315667113
+    },
+    {
+      "feature": "boom_use_rate_expected",
+      "importance": 0.5215858713878997
+    },
+    {
+      "feature": "event_fill_rate",
+      "importance": 0.5171559310982115
+    }
+  ],
+  "limitations": [
+    "Solo existen 32 eventos etiquetados; las métricas tienen incertidumbre alta.",
+    "Los intervalos p10-p90 usan residuales OOF empíricos y deben recalibrarse con más meses.",
+    "La predicción cubre únicamente tickets adquiridos al corte, no ventas futuras."
+  ]
+}

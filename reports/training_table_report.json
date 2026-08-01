@@ -1,0 +1,48 @@
+{
+  "training": {
+    "rows": 6722,
+    "events": 32,
+    "sales": 3556,
+    "attendance_rate": 0.739215
+  },
+  "scoring": {
+    "rows": 5209,
+    "events": 30,
+    "sales": 2827
+  },
+  "features": {
+    "categorical": 11,
+    "numeric": 45,
+    "total_model_features": 56
+  },
+  "match_status_training": {
+    "DIRECT_HIGH": 4088,
+    "NEW_OR_UNKNOWN": 2535,
+    "UNRESOLVED_IDENTITY": 71,
+    "ALIAS_PROBABLE": 19,
+    "DIRECT_PROBABLE": 9
+  },
+  "match_status_scoring": {
+    "DIRECT_HIGH": 3317,
+    "NEW_OR_UNKNOWN": 1810,
+    "UNRESOLVED_IDENTITY": 66,
+    "ALIAS_PROBABLE": 12,
+    "DIRECT_PROBABLE": 4
+  },
+  "boom_population_priors": {
+    "use_rate": 0.700431,
+    "tickets_total": 3.342667,
+    "tickets_used": 2.1585,
+    "membership": 0.221,
+    "points": 77.459,
+    "friends_count": 3.937
+  },
+  "leakage_excluded": [
+    "checked_in_at",
+    "checked_in_count",
+    "attendance_rate",
+    "date_used",
+    "last_used_at",
+    "future_used_leak_count"
+  ]
+}
